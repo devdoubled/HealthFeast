@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "HealthFeast",
+    "slug": "HealthFeast",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/logo.png",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "softwareKeybo"
+    },
+    "web": {},
+    "plugins": [
+      "expo-font"
+    ]
+  }
+}

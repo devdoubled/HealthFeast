@@ -1,0 +1,67 @@
+import React from "react";
+import {
+  Dimensions,
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import MainLogo from "../../assets/images/main-logo.png";
+const EnterPasswordScreen = () => {
+  const { width } = Dimensions.get("window").width;
+  return (
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.top_container}>
+        <Text style={styles.title}>Nhập mật khẩu</Text>
+        <Image source={MainLogo} style={styles.main_logo} />
+      </View>
+      <View style={[styles.input_container, { width }]}>
+        <Text style={styles.yourAccount}>Tài khoản của bạn</Text>
+        <TextInput
+          value="duyledl2002@gmail.com"
+          readOnly
+          style={styles.yourAccount_input}
+        />
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+
+export default EnterPasswordScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: "#ffffff",
+  },
+  top_container: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  title: {
+    fontFamily: "Montserrat-Medium",
+    fontSize: 26,
+    color: "#000000",
+  },
+  main_logo: {
+    resizeMode: "cover",
+    marginTop: 20,
+  },
+  input_container: {
+    marginHorizontal: 25,
+  },
+  yourAccount: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 13,
+    color: "#B4B4B4",
+  },
+  yourAccount_input: {
+    
+  },
+});
