@@ -1,0 +1,16 @@
+export default [
+    {
+        id: 1,
+        title: "Công thức",
+        screen_name: "RecipeScreen"
+    },
+    {
+        id: 2,
+        title: "Kế hoạch",screen_name: "RecipeScreen"
+    },
+    {
+        id: 3,
+        title: "Gợi ý",
+        screen_name: "RecipeScreen"
+    },
+]
