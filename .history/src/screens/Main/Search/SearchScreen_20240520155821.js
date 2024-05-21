@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform, ScrollView, StyleSheet, Text } from 'react-native';
 
-const SearchScreen = () => {
+const SearchScreen = ({}) => {
   return (
     <ScrollView style={styles.container}>
     </ScrollView>

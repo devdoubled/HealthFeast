@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform, Pressable, StyleSheet, Text } from 'react-native'
+import { Pressable, StyleSheet, Text } from 'react-native'
 
 const NavbarItem = ({item, selectedTab, handleTabPress}) => {
   return (
