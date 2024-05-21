@@ -1,7 +1,8 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Button,
   Platform,
   Pressable,
@@ -9,9 +10,15 @@ import {
   Text,
   View,
 } from "react-native";
-const ScanCameraScreen = () => {
-  const [permission, requestPermission] = useCameraPermissions();
+import ImageScanView from "../../../components/Main/Search/ImageScanView";
+import WatingScan from "../../../components/Main/Search/WatingScan";
+const ScanCameraScreen = ({ navigation }) => {
   const cameraRef = useRef();
+  const [permission, requestPermission] = useCameraPermissions();
+  const [flash, setFlash] = useState(false);
+  const [scanImage, setScanImage] = useState(null);
+  const [isWatingScan, setIsWatingScan] = useState(false);
+
   if (!permission) {
     return <View />;
   }
@@ -22,7 +29,7 @@ const ScanCameraScreen = () => {
         <Text style={{ textAlign: "center" }}>
           We need your permission to show the camera
         </Text>
-        <Button onPress={requestPermission} title="grant permission" />
+        <Button onPress={requestPermission} title="Allow" />
       </View>
     );
   }
@@ -30,27 +37,61 @@ const ScanCameraScreen = () => {
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
-      console.log(photo.uri);
+      setTimeout(() => setScanImage(photo.uri), 1500);
+      setIsWatingScan(true);
+      setTimeout(() => setIsWatingScan(false), 10000);
     }
+  };
+
+  const goBackPrevScreen = () => {
+    navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={"back"} ref={cameraRef}>
-        <View style={styles.overlay}>
-          <View style={styles.scanFrame}>
-            <View style={[styles.corner, styles.topLeft]} />
-            <View style={[styles.corner, styles.topRight]} />
-            <View style={[styles.corner, styles.bottomLeft]} />
-            <View style={[styles.corner, styles.bottomRight]} />
+      {isWatingScan ? (
+        scanImage ? (
+          <WatingScan image={scanImage} goBackPrevScreen={goBackPrevScreen}/>
+        ) : (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#9ABF5A" />
           </View>
-        </View>
-        <View style={styles.buttonContainer}>
-          <Pressable style={({pressed}) => [styles.button, pressed && styles.buttonPressed]} onPress={takePicture}>
-            <MaterialCommunityIcons name="line-scan" size={40} color="black" />
+        )
+      ) : scanImage ? (
+        <ImageScanView image={scanImage} goBackPrevScreen={goBackPrevScreen}/>
+      ) : (
+        <CameraView style={styles.camera} facing={"back"} ref={cameraRef}>
+          <Pressable
+            style={styles.back_container}
+            onPress={goBackPrevScreen}
+          >
+            <Ionicons name="chevron-back" size={26} color="white" />
           </Pressable>
-        </View>
-      </CameraView>
+          <View style={styles.overlay}>
+            <View style={styles.scanFrame}>
+              <View style={[styles.corner, styles.topLeft]} />
+              <View style={[styles.corner, styles.topRight]} />
+              <View style={[styles.corner, styles.bottomLeft]} />
+              <View style={[styles.corner, styles.bottomRight]} />
+            </View>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={takePicture}
+            >
+              <MaterialCommunityIcons
+                name="line-scan"
+                size={40}
+                color="black"
+              />
+            </Pressable>
+          </View>
+        </CameraView>
+      )}
     </View>
   );
 };
@@ -60,11 +101,28 @@ export default ScanCameraScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     backgroundColor: "#ffffff",
     marginBottom: Platform.OS === "ios" ? 80 : 70,
   },
+  loading: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   camera: {
     flex: 1,
+  },
+  back_container: {
+    top: 55,
+    left: 15,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    zIndex: 1
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -77,6 +135,7 @@ const styles = StyleSheet.create({
     position: "relative",
     borderWidth: 2,
     borderColor: "transparent",
+    overflow: "hidden",
   },
   corner: {
     position: "absolute",
@@ -89,28 +148,24 @@ const styles = StyleSheet.create({
     left: 0,
     borderTopWidth: 2,
     borderLeftWidth: 2,
-    borderTopLeftRadius: 20,
   },
   topRight: {
     top: 0,
     right: 0,
     borderTopWidth: 2,
     borderRightWidth: 2,
-    borderTopRightRadius: 20,
   },
   bottomLeft: {
     bottom: 0,
     left: 0,
     borderBottomWidth: 2,
     borderLeftWidth: 2,
-    borderBottomLeftRadius: 20,
   },
   bottomRight: {
     bottom: 0,
     right: 0,
     borderBottomWidth: 2,
     borderRightWidth: 2,
-    borderBottomRightRadius: 20,
   },
   buttonContainer: {
     flex: 1,
@@ -129,6 +184,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   buttonPressed: {
-    opacity: 0.7
-  }
+    opacity: 0.7,
+  },
 });
