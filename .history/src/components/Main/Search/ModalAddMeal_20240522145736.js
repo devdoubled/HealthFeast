@@ -1,0 +1,97 @@
+import React from "react";
+import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import ModalAddImg from "../../../assets/images/modal_add.png";
+import { AntDesign } from "@expo/vector-icons";
+const ModalAddMeal = ({ visible, handleCloseModal }) => {
+  return (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={handleCloseModal}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <AntDesign
+            name="closecircleo"
+            size={30}
+            color="white"
+            style={styles.close_icon}
+          />
+          <View style={styles.modal_title}>
+            <Image source={ModalAddImg} style={styles.modal_img} />
+            <Text style={styles.modal_text}>Thêm vào bữa ăn bạn muốn</Text>
+          </View>
+          <View style={styles.choose_meal}>
+            <Pressable style={styles.choose_btn}>
+              <Text style={styles.choose_text}>Bữa ăn sáng</Text>
+            </Pressable>
+            <Pressable style={styles.choose_btn}>
+              <Text style={styles.choose_text}>Bữa ăn sáng</Text>
+            </Pressable>
+            <Pressable style={styles.choose_btn}>
+              <Text style={styles.choose_text}>Bữa ăn sáng</Text>
+            </Pressable>
+            <Pressable style={styles.choose_btn}>
+              <Text style={styles.choose_text}>Bữa ăn sáng</Text>
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+export default ModalAddMeal;
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    position: "relative",
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    position: "absolute",
+    bottom: 150,
+    width: 350,
+    padding: 20,
+    paddingBottom: 10,
+    backgroundColor: "#464646",
+    borderRadius: 15,
+    alignItems: "center",
+  },
+  close_icon: {
+    
+  },
+  modal_title: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modal_img: {
+    marginBottom: 5,
+  },
+  modal_text: {
+    fontFamily: "Montserrat-Italic",
+    fontSize: 20,
+    color: "#FFFFFF",
+  },
+  choose_meal: {
+    width: "100%",
+    marginTop: 10,
+  },
+  choose_btn: {
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+  },
+  choose_text: {
+    fontFamily: "Montserrat-Medium",
+    fontSize: 16,
+    color: "#9ABF5A",
+  },
+});
