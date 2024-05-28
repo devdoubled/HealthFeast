@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   voice_container: {
-    width: 175,
+    width: Platform.OS === "ios" ? 178 : 170,
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#464646",
   },
   scan_container: {
-    width: 175,
+    width: Platform.OS === "ios" ? 178 : 170,
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
