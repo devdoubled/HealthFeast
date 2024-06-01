@@ -5,15 +5,15 @@ export default [
   },
   {
     id: 2,
-    type: "weight",
+    type: "gender",
   },
   {
     id: 3,
-    type: "target_weight",
+    type: "weight",
   },
   {
     id: 4,
-    type: "gender",
+    type: "target_weight",
   },
   {
     id: 5,
@@ -21,7 +21,7 @@ export default [
   },
   {
     id: 6,
-    type: "old",
+    type: "age",
   },
   {
     id: 7,

@@ -6,6 +6,7 @@ import ForgetPasswordScreen from "../../screens/Auth/ForgetPasswordScreen";
 import GetCodeScreen from "../../screens/Auth/GetCodeScreen";
 import LoginScreen from "../../screens/Auth/LoginScreen";
 import RegisterScreen from "../../screens/Auth/RegisterScreen";
+import AskingResultScreen from "../../screens/Asking/AskingResultScreen";
 const Stack = createNativeStackNavigator();
 const AuthStack = ({ route }) => {
   const { screen } = route.params ? route.params : { screen: "LoginScreen" };
@@ -34,6 +35,12 @@ const AuthStack = ({ route }) => {
         options={{ headerShown: false }}
       >
         {(props) => <AskingScreen {...props} />}
+      </Stack.Screen>
+      <Stack.Screen
+        name="AskingResultScreen"
+        options={{ headerShown: false }}
+      >
+        {(props) => <AskingResultScreen {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

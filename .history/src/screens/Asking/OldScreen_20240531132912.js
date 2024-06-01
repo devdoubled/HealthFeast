@@ -1,0 +1,51 @@
+import React from "react";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import CustomButton from "../../components/Auth/CustomButton";
+
+const OldScreen = ({ onNext }) => {
+  const { width } = useWindowDimensions();
+  const handleNext = () => {
+    onNext();
+  };
+  return (
+    <View style={styles.container}>
+      <Text style={styles.heading_text}>Bạn bao nhiêu tuổi?</Text>
+      <Text style={styles.sub_text}>
+      Độ tuổi của bạn đóng vai trò quan trọng trong việc xác định nhu cầu dinh dưỡng và cân nặng lý tưởng.. thông tin này sẽ vẫn
+        ở chế độ riêng tư
+      </Text>
+      <View style={[styles.action_container, { width: width - 60 }]}>
+        <CustomButton text="Tiếp tục" onPress={handleNext} />
+      </View>
+    </View>
+  );
+};
+
+export default OldScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    position: "relative",
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    marginHorizontal: 30,
+    marginTop: 30,
+  },
+  heading_text: {
+    fontFamily: "Montserrat-Medium",
+    fontSize: 24,
+    textAlign: "center",
+  },
+  sub_text: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 14,
+    textAlign: "center",
+    paddingTop: 8,
+    lineHeight: 20,
+  },
+  action_container: {
+    position: "absolute",
+    bottom: 40,
+  },
+});
