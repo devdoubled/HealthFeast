@@ -4,7 +4,6 @@ import {
   Dimensions,
   Image,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,36 +12,10 @@ import {
 import PurposeImg from "../../../assets/images/activity_less.png";
 import UserAvt from "../../../assets/images/user_default.png";
 import settingOptions from "../../../data/settingOptions";
-const SettingScreen = ({ navigation }) => {
+const SettingScreen = () => {
   const width = Dimensions.get("window").width;
-
-  const handlePressOption = (title) => {
-    if (title === "Gói Premium") {
-      navigation.navigate("PremiumScreen");
-    } else if (title === "Hồ sơ") {
-      navigation.navigate("ProfileScreen");
-    } else if (title === "Lịch sử") {
-      navigation.navigate("HistoryScreen");
-    } else if (title === "Thông báo") {
-      navigation.navigate("NotifyScreen");
-    } else if (title === "Cài đặt") {
-      navigation.navigate("OptionScreen");
-    } else if (title === "Trung tâm bảo mật") {
-      navigation.navigate("SecurityScreen");
-    } else if (title === "Giúp") {
-      navigation.navigate("HelpScreen");
-    } else if (title === "Về chúng tôi") {
-      navigation.navigate("AboutScreen");
-    } else {
-      console.log(title);
-    }
-  };
   return (
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
+    <ScrollView style={styles.container}>
       <View style={[styles.more_header, { width: width - 32 }]}>
         <View style={styles.streak}>
           <Text style={styles.streak_title}>Tích lũy</Text>
@@ -70,23 +43,15 @@ const SettingScreen = ({ navigation }) => {
       </View>
       <View style={[styles.more_options_container, { width: width - 32 }]}>
         {settingOptions.map((option) => (
-          <Pressable
-            style={styles.option_container}
-            key={option.id}
-            onPress={() => handlePressOption(option.title)}
-          >
+          <View style={styles.option_container} key={option.id}>
             <View style={styles.option_content}>
               <View style={styles.option_img_container}>
-                {option.iconType === "component" ? (
-                  option.icon
-                ) : (
-                  <Image source={option.icon} />
-                )}
+                <Image source={option.icon} style={styles.option_img} />
               </View>
               <Text style={styles.option_text}>{option.title}</Text>
             </View>
             <AntDesign name="right" size={24} color="black" />
-          </Pressable>
+          </View>
         ))}
       </View>
     </ScrollView>

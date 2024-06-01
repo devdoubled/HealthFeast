@@ -6,7 +6,8 @@ import HistoryScreen from "../../screens/Main/Setting/HistoryScreen";
 import NotifyScreen from "../../screens/Main/Setting/NotifyScreen";
 import OptionScreen from "../../screens/Main/Setting/OptionScreen";
 import PremiumScreen from "../../screens/Main/Setting/PremiumScreen";
-import { default as ProfileScreen, default as SecurityScreen } from "../../screens/Main/Setting/ProfileScreen";
+import ProfileScreen from "../../screens/Main/Setting/ProfileScreen";
+import ProfileScreen from "../../screens/Main/Setting/ProfileScreen";
 import SettingScreen from "../../screens/Main/Setting/SettingScreen";
 const Stack = createNativeStackNavigator();
 const SettingStack = () => {
@@ -62,7 +63,7 @@ const SettingStack = () => {
       <Stack.Screen
         name="AboutScreen"
         options={({ navigation }) => ({
-          title: "Về chúng tôi",
+          title: "Vế chúng tôi",
           headerTitleAlign: "center",
           headerTintColor: "#000",
           headerShadowVisible: false,

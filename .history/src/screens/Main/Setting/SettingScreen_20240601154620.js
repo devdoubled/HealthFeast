@@ -17,25 +17,19 @@ const SettingScreen = ({ navigation }) => {
   const width = Dimensions.get("window").width;
 
   const handlePressOption = (title) => {
-    if (title === "Gói Premium") {
-      navigation.navigate("PremiumScreen");
-    } else if (title === "Hồ sơ") {
+    if (title === "Hồ sơ") {
       navigation.navigate("ProfileScreen");
     } else if (title === "Lịch sử") {
       navigation.navigate("HistoryScreen");
     } else if (title === "Thông báo") {
-      navigation.navigate("NotifyScreen");
-    } else if (title === "Cài đặt") {
-      navigation.navigate("OptionScreen");
-    } else if (title === "Trung tâm bảo mật") {
-      navigation.navigate("SecurityScreen");
-    } else if (title === "Giúp") {
-      navigation.navigate("HelpScreen");
-    } else if (title === "Về chúng tôi") {
-      navigation.navigate("AboutScreen");
-    } else {
-      console.log(title);
-    }
+
+    }else if (title === "Cài đặt") {
+
+    }else if (title === "Bảo mật") {
+
+    }else if (title === "Giúp") {
+
+    }else if (title === "")
   };
   return (
     <ScrollView

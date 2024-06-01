@@ -17,8 +17,9 @@ const SettingScreen = ({ navigation }) => {
   const width = Dimensions.get("window").width;
 
   const handlePressOption = (title) => {
-    if (title === "Gói Premium") {
-      navigation.navigate("PremiumScreen");
+    if (title === "Gói Premiun") {
+      navigation.navigate("ProfileScreen");
+
     } else if (title === "Hồ sơ") {
       navigation.navigate("ProfileScreen");
     } else if (title === "Lịch sử") {
@@ -27,7 +28,7 @@ const SettingScreen = ({ navigation }) => {
       navigation.navigate("NotifyScreen");
     } else if (title === "Cài đặt") {
       navigation.navigate("OptionScreen");
-    } else if (title === "Trung tâm bảo mật") {
+    } else if (title === "Bảo mật") {
       navigation.navigate("SecurityScreen");
     } else if (title === "Giúp") {
       navigation.navigate("HelpScreen");

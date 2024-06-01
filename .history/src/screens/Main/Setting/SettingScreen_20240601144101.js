@@ -1,99 +1,50 @@
-import { AntDesign } from "@expo/vector-icons";
-import React from "react";
-import {
-  Dimensions,
-  Image,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import React from 'react';
+import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import PurposeImg from "../../../assets/images/activity_less.png";
+import PremiumIcon from "../../../assets/images/setting_premium.png";
 import UserAvt from "../../../assets/images/user_default.png";
-import settingOptions from "../../../data/settingOptions";
-const SettingScreen = ({ navigation }) => {
+const SettingScreen = () => {
   const width = Dimensions.get("window").width;
-
-  const handlePressOption = (title) => {
-    if (title === "Gói Premium") {
-      navigation.navigate("PremiumScreen");
-    } else if (title === "Hồ sơ") {
-      navigation.navigate("ProfileScreen");
-    } else if (title === "Lịch sử") {
-      navigation.navigate("HistoryScreen");
-    } else if (title === "Thông báo") {
-      navigation.navigate("NotifyScreen");
-    } else if (title === "Cài đặt") {
-      navigation.navigate("OptionScreen");
-    } else if (title === "Trung tâm bảo mật") {
-      navigation.navigate("SecurityScreen");
-    } else if (title === "Giúp") {
-      navigation.navigate("HelpScreen");
-    } else if (title === "Về chúng tôi") {
-      navigation.navigate("AboutScreen");
-    } else {
-      console.log(title);
-    }
-  };
   return (
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
-      <View style={[styles.more_header, { width: width - 32 }]}>
+    <ScrollView style={styles.container}>
+      <View style={[styles.more_header, { width : width - 32}]}>
         <View style={styles.streak}>
           <Text style={styles.streak_title}>Tích lũy</Text>
           <Text style={styles.streak_count}>1</Text>
           <Text style={styles.streak_desc}>Ngày</Text>
         </View>
         <View style={styles.user}>
-          <Image source={UserAvt} style={styles.user_avt} />
+          <Image source={UserAvt} style={styles.user_avt}/>
           <Text style={styles.user_name}>Dev DoubleD</Text>
         </View>
         <View style={styles.progress}>
-          <Text style={styles.progress_title}>Quá trình</Text>
+        <Text style={styles.progress_title}>Quá trình</Text>
           <Text style={styles.progress_count}>10</Text>
           <Text style={styles.progress_desc}>Giảm/ Kgs</Text>
         </View>
       </View>
-      <View style={[styles.more_purpose, { width: width - 32 }]}>
-        <Image source={PurposeImg} style={styles.purpose_img} />
+      <View style={[styles.more_purpose, { width : width - 32}]}>
+        <Image source={PurposeImg} style={styles.purpose_img}/>
         <View style={styles.purpose_info}>
           <Text style={styles.purpose_title}>Nhớ cập nhật BMI nhoé</Text>
-          <Text style={styles.purpose_desc}>
-            Cập nhật thường xuyên để có chỉ số chính xác.
-          </Text>
+          <Text style={styles.purpose_desc}>Cập nhật thường xuyên để có chỉ số chính xác.</Text>
         </View>
       </View>
       <View style={[styles.more_options_container, { width: width - 32 }]}>
-        {settingOptions.map((option) => (
-          <Pressable
-            style={styles.option_container}
-            key={option.id}
-            onPress={() => handlePressOption(option.title)}
-          >
-            <View style={styles.option_content}>
-              <View style={styles.option_img_container}>
-                {option.iconType === "component" ? (
-                  option.icon
-                ) : (
-                  <Image source={option.icon} />
-                )}
-              </View>
-              <Text style={styles.option_text}>{option.title}</Text>
+        <View style={styles.option_container}>
+          <View style={styles.option_content}>
+            <View style={styles.option_img_container}>
+              <Image source={PremiumIcon} style={styles.option_img}/>
             </View>
-            <AntDesign name="right" size={24} color="black" />
-          </Pressable>
-        ))}
+            <Text style={styles.option_text}>Gói Premium</Text>
+          </View>
+        </View>
       </View>
     </ScrollView>
-  );
-};
+  )
+}
 
-export default SettingScreen;
+export default SettingScreen
 
 const styles = StyleSheet.create({
   container: {
@@ -137,7 +88,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    resizeMode: "contain",
+    resizeMode: 'contain'
   },
   user_name: {
     fontFamily: "Montserrat-Medium",
@@ -175,7 +126,7 @@ const styles = StyleSheet.create({
   purpose_img: {
     marginRight: 12,
     width: 50,
-    height: 50,
+    height: 50
   },
   purpose_info: {
     flexDirection: "column",
@@ -199,12 +150,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderRadius: 15,
-    marginBottom: 12,
-    borderColor: "#9ABF5A",
   },
   option_content: {
     flexDirection: "row",
@@ -214,14 +159,11 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 25,
-    marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#2E2E2E",
+    backgroundColor: "#2E2E2E"
   },
-  option_text: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: 18,
-    color: "#000000",
-  },
-});
+  option_img: {
+    marginRight: 15,
+  }
+})
