@@ -1,16 +1,15 @@
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import React from "react";
 import {
-  Image,
   ImageBackground,
   Pressable,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 const RecipeItem = ({ item, navigation }) => {
   const handleDetailRecipePress = () => {
-    navigation.navigate("RecipeDetailScreen");
+    navigation.navigate("RecipeDetailScreen", { recipe: item });
   };
   return (
     <Pressable
@@ -21,15 +20,15 @@ const RecipeItem = ({ item, navigation }) => {
       onPress={handleDetailRecipePress}
     >
       <ImageBackground
-        source={{ uri: item.image }}
+        source={{ uri: item.images[0].imagePath }}
         style={styles.recipe_item}
         imageStyle={styles.imageBackground}
       >
-        <FontAwesome5 name="arrow-alt-circle-right" size={24} color="white" style={styles.item_next}/>
-        <Text style={styles.recipe_item_title}>{item.title}</Text>
+        <FontAwesome5 name="arrow-alt-circle-right" size={24} color="white" style={styles.item_next} />
+        <Text style={styles.recipe_item_title}>{item.recipeName}</Text>
         <View style={styles.recipe_item_details}>
-          <Text style={styles.details_text}>{item.calories}</Text>
-          <Text style={styles.details_text}>{item.time}</Text>
+          <Text style={styles.details_text}>{item.totalCalories} kCal</Text>
+          <Text style={styles.details_text}>{item.timeInMinute} Phút</Text>
         </View>
       </ImageBackground>
     </Pressable>

@@ -1,20 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
   Platform,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import RecipeIconText from "../../../assets/images/activity_very.png";
 import NavbarList from "../../../components/Main/Recipe/NavbarList";
 import RecipeItem from "../../../components/Main/Recipe/RecipeItem";
-import recipeList from "../../../data/recipeList";
+import apiClient from './../../../services/apiService';
 const RecipeScreen = ({ navigation, route }) => {
   const width = Dimensions.get("window").width;
-  
+  const [recipes, setRecipes] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await apiClient.get("/Recipes");
+        const filteredRecipes = response.data.filter(
+          (recipe) => recipe.recipeId !== 1 && recipe.recipeId !== 13
+        );
+        setRecipes(filteredRecipes);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    };
+
+    fetchRecipes();
+  }, [])
   return (
     <View style={styles.container}>
       <NavbarList width={width} navigation={navigation} route={route} />
@@ -25,14 +44,21 @@ const RecipeScreen = ({ navigation, route }) => {
           <Text style={styles.normal_text}>Hãy chọn 1 món ăn bạn muốn.</Text>
         </View>
       </View>
-      <FlatList
-        data={recipeList}
-        renderItem={({ item }) => <RecipeItem item={item} navigation={navigation}/>}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-        numColumns={2}
-        contentContainerStyle={[styles.list_container, { width: width - 24 }]}
-      />
+      {isLoading && recipes.length === 0 ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#9ABF5A" />
+        </View>
+      ) : (
+        <FlatList
+          data={recipes}
+          renderItem={({ item }) => <RecipeItem item={item} navigation={navigation} />}
+          keyExtractor={(item) => item.recipeId}
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          contentContainerStyle={[styles.list_container, { width: width - 24 }]}
+        />
+      )}
+
     </View>
   );
 };
@@ -73,30 +99,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     paddingBottom: 10,
   },
-  item: {
+  loadingContainer: {
     flex: 1,
-    margin: 10,
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  image: {
-    width: "100%",
-    height: 100,
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginVertical: 5,
-  },
-  details: {
-    fontSize: 14,
-    color: "#666",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

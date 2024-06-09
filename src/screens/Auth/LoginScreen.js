@@ -1,4 +1,6 @@
-import React, { useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+// import * as Updates from 'expo-updates';
+import React, { useRef, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -10,15 +12,53 @@ import {
 } from "react-native";
 import MainLogo from "../../assets/images/main-logo.png";
 import CustomButton from "../../components/Auth/CustomButton";
+import Loading from "../../components/Loading";
 import loginOptions from "../../data/loginOptions";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import apiClient from "../../services/apiService";
+
 const LoginScreen = ({ navigation }) => {
   const { width } = Dimensions.get("window").width;
   const passwordInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("")
+
   const handlePressLogin = async () => {
-    navigation.navigate("AskingScreen")
-    // await AsyncStorage.removeItem("@viewOnboarding")
+    setIsLoading(true)
+    const loginData = {
+      email: email,
+      password: password
+    }
+    try {
+      const response = await apiClient.post("/Account/login", loginData);
+
+      const token = response.data.token;
+      await AsyncStorage.setItem("userToken", token);
+
+      const isNewUser = response.data.account.status;
+      if (isNewUser === 2) {
+        navigation.navigate("AskingScreen", { userId: response.data.account.accountId });
+      } 
+      else if (isNewUser === 3) {
+        // await Updates.reloadAsync();
+        navigation.navigate("MainStack");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        setErrorMsg(error.response.data.message)
+      }
+    } finally {
+      setIsLoading(false)
+      setEmail("")
+      setPassword("")
+    }
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   const handlePressRegister = () => {
     navigation.navigate("RegisterScreen");
@@ -44,6 +84,9 @@ const LoginScreen = ({ navigation }) => {
           style={styles.input_email}
           placeholder="Email"
           keyboardType="email-address"
+          onChangeText={setEmail}
+          spellCheck={false}
+          autoCapitalize={false}
           onSubmitEditing={() => passwordInputRef.current.focus()}
         />
         <TextInput
@@ -52,8 +95,17 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Nhập mật khẩu"
           keyboardType="default"
           secureTextEntry={true}
+          spellCheck={false}
+          autoCapitalize={false}
+          onChangeText={setPassword}
         />
-        <View style={styles.signup}>
+        {errorMsg && (
+          <View style={styles.error}>
+            <Text style={styles.error_text}>{errorMsg}</Text>
+          </View>
+        )}
+
+        <View style={[styles.signup, { marginTop: errorMsg ? 10 : 15 }]}>
           <Text style={styles.signup_normal}>Bạn có tài khoản chưa? </Text>
           <Pressable
             style={({ pressed }) => pressed && styles.pressed_signup_highlight}
@@ -66,6 +118,7 @@ const LoginScreen = ({ navigation }) => {
           text="Đăng nhập"
           style={styles.login_btn}
           onPress={handlePressLogin}
+          disabled={email === "" || password === ""}
         />
         {loginOptions.map((option) => (
           <Pressable
@@ -77,7 +130,7 @@ const LoginScreen = ({ navigation }) => {
           >
             <View style={styles.login_social_content}>
               <View style={styles.login_social_img}>
-              {option.image}
+                {option.image}
               </View>
               <Text style={styles.login_social_text}>{option.title}</Text>
             </View>
@@ -134,11 +187,18 @@ const styles = StyleSheet.create({
   input_password: {
     paddingVertical: 12,
     paddingHorizontal: 12,
-    marginBottom: 15,
     fontFamily: "Montserrat-Regular",
     fontSize: 16,
     borderRadius: 10,
     backgroundColor: "#F3F2F1",
+  },
+  error: {
+    marginTop: 10,
+  },
+  error_text: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 13,
+    color: "red",
   },
   signup: {
     flexDirection: "row",

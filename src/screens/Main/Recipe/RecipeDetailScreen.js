@@ -12,8 +12,9 @@ import {
 import ComponentItem from "../../../components/Main/Recipe/ComponentItem";
 import IngredientItem from "../../../components/Main/Recipe/IngredientItem";
 import componentList from "../../../data/componentList";
-const RecipeDetailScreen = () => {
+const RecipeDetailScreen = ({ route }) => {
   const width = Dimensions.get("window").width;
+  const { recipe } = route.params
   return (
     <ScrollView
       style={styles.container}
@@ -22,13 +23,11 @@ const RecipeDetailScreen = () => {
     >
       <View style={[styles.image_container, { width: width - 32 }]}>
         <Image
-          source={{
-            uri: "https://static.vinwonders.com/2023/02/com-ga-da-nang-1.jpg",
-          }}
+          source={{ uri: recipe.images[0].imagePath }}
           style={styles.recipe_image}
         />
       </View>
-      <Text style={styles.recipe_name}>Cơm ức gà</Text>
+      <Text style={styles.recipe_name}>{recipe.recipeName}</Text>
       <View style={styles.ingredient_container}>
         <IngredientItem
           icon={
@@ -39,7 +38,7 @@ const RecipeDetailScreen = () => {
             />
           }
           title={"Cân nặng"}
-          number={300}
+          number={recipe.weightInGram}
           unit={"Grams"}
         />
         <IngredientItem
@@ -51,13 +50,13 @@ const RecipeDetailScreen = () => {
             />
           }
           title={"Lượng calo"}
-          number={500}
+          number={recipe.totalCalories}
           unit={"kCal"}
         />
         <IngredientItem
           icon={<MaterialIcons name="access-time" size={22} color="#000000" />}
           title={"Thời gian"}
-          number={45}
+          number={recipe.timeInMinute}
           unit={"Phút"}
           isBorder={"Thời gian"}
         />
