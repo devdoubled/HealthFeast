@@ -14,7 +14,6 @@ import PurposeImg from "../../../assets/images/activity_less.png";
 import UserAvt from "../../../assets/images/user_default.png";
 import { AuthContext } from "../../../context/AuthContext";
 import settingOptions from "../../../data/settingOptions";
-import * as Updates from 'expo-updates';
 
 const SettingScreen = ({ navigation }) => {
   const { logout } = useContext(AuthContext);
@@ -23,26 +22,24 @@ const SettingScreen = ({ navigation }) => {
 
   const handlePressOption = async (title) => {
     const screenMapping = {
-      "Gói Premium": "PremiumScreen",
-      "Hồ sơ": "ProfileScreen",
-      "Lịch sử": "HistoryScreen",
-      "Thông báo": "NotifyScreen",
-      "Cài đặt": "OptionScreen",
-      "Trung tâm bảo mật": "SecurityScreen",
-      "Giúp": "HelpScreen",
-      "Về chúng tôi": "AboutScreen"
+        "Gói Premium": "PremiumScreen",
+        "Hồ sơ": "ProfileScreen",
+        "Lịch sử": "HistoryScreen",
+        "Thông báo": "NotifyScreen",
+        "Cài đặt": "OptionScreen",
+        "Trung tâm bảo mật": "SecurityScreen",
+        "Giúp": "HelpScreen",
+        "Về chúng tôi": "AboutScreen"
     };
 
     const screen = screenMapping[title];
-
+    
     if (screen) {
-      navigation.navigate(screen);
+        navigation.navigate(screen);
     } else {
       await logout();
-      await Updates.reloadAsync();
-
     }
-  };
+};
   return (
     <ScrollView
       style={styles.container}
@@ -231,6 +228,6 @@ const styles = StyleSheet.create({
     color: "#000000",
   },
   pressed: {
-    backgroundColor: "rgba(154, 191, 90, 0.2)"
+    backgroundColor: "rgba(154, 191, 90, 0.3)"
   }
 });

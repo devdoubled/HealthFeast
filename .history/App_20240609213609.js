@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import { useContext, useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import AuthStack from "./src/navigation/Auth/AuthStack";
 import MainStack from "./src/navigation/Main/MainStack";
@@ -26,7 +26,7 @@ const AppContent = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 2500);
   }, []);
 
   useEffect(() => {
@@ -93,3 +93,5 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({});

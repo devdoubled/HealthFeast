@@ -33,9 +33,9 @@ const LoginScreen = ({ navigation }) => {
     }
     try {
       const response = await apiClient.post("/Account/login", loginData);
-      const token = response.data.token
       const userData = response.data.account
-      await login(userData, token);
+      log
+      // await login(userData);
       const isNewUser = userData.status;
       if (isNewUser === 2) {
         navigation.navigate("AskingScreen", { userId: userData.accountId });

@@ -2,19 +2,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
-import { useContext, useEffect, useState } from "react";
-import { StatusBar } from "react-native";
-import { AuthContext, AuthProvider } from './src/context/AuthContext';
+import { useEffect, useState } from "react";
+import { StatusBar, StyleSheet } from "react-native";
 import AuthStack from "./src/navigation/Auth/AuthStack";
 import MainStack from "./src/navigation/Main/MainStack";
 import LoadingScreen from "./src/screens/Intro/LoadingScreen";
 import OnboardingScreen from "./src/screens/Intro/OnboardingScreen";
+import { AuthProvider, AuthContext } from './src/context/AuthContext';
 const Stack = createNativeStackNavigator();
-
-const AppContent = () => {
-  const { user } = useContext(AuthContext);
+export default function App() {
+  
   const [isLoading, setIsLoading] = useState(true);
   const [viewOnboarding, setViewOnboarding] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
   const [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("./src/assets/fonts/Montserrat-Bold.ttf"),
     "Montserrat-Medium": require("./src/assets/fonts/Montserrat-Medium.ttf"),
@@ -30,8 +30,22 @@ const AppContent = () => {
   }, []);
 
   useEffect(() => {
+    checkAuthentication();
     checkOnboarding();
   }, []);
+
+  const checkAuthentication = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      if (userToken !== null) {
+        setIsLogin(true);
+      }
+    } catch (error) {
+      console.log("Error @checkAuthentication: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const checkOnboarding = async () => {
     try {
@@ -60,11 +74,11 @@ const AppContent = () => {
       />
       <Stack.Navigator
         initialRouteName={
-          user
+          isLogin
             ? "MainStack"
             : viewOnboarding
-              ? "AuthStack"
-              : "OnboardingScreen"
+            ? "AuthStack"
+            : "OnboardingScreen"
         }
       >
         <Stack.Screen
@@ -85,11 +99,6 @@ const AppContent = () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
-export default function App() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
 }
+
+const styles = StyleSheet.create({});

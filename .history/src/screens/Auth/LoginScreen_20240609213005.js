@@ -1,5 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import * as Updates from 'expo-updates';
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -12,7 +13,6 @@ import {
 import MainLogo from "../../assets/images/main-logo.png";
 import CustomButton from "../../components/Auth/CustomButton";
 import Loading from "../../components/Loading";
-import { AuthContext } from "../../context/AuthContext";
 import loginOptions from "../../data/loginOptions";
 import apiClient from "../../services/apiService";
 
@@ -33,12 +33,14 @@ const LoginScreen = ({ navigation }) => {
     }
     try {
       const response = await apiClient.post("/Account/login", loginData);
-      const token = response.data.token
-      const userData = response.data.account
-      await login(userData, token);
-      const isNewUser = userData.status;
+
+      const token = response.data.token;
+      const userInfo = response.data.account
+      await AsyncStorage.setItem("userToken", token);
+
+      const isNewUser = response.data.account.status;
       if (isNewUser === 2) {
-        navigation.navigate("AskingScreen", { userId: userData.accountId });
+        navigation.navigate("AskingScreen", { userId: response.data.account.accountId });
       } 
       else if (isNewUser === 3) {
         // await Updates.reloadAsync();

@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import React, { useContext } from "react";
+import React from "react";
 import {
   Dimensions,
   Image,
@@ -12,37 +12,35 @@ import {
 } from "react-native";
 import PurposeImg from "../../../assets/images/activity_less.png";
 import UserAvt from "../../../assets/images/user_default.png";
-import { AuthContext } from "../../../context/AuthContext";
 import settingOptions from "../../../data/settingOptions";
-import * as Updates from 'expo-updates';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SettingScreen = ({ navigation }) => {
-  const { logout } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const width = Dimensions.get("window").width;
 
   const handlePressOption = async (title) => {
     const screenMapping = {
-      "Gói Premium": "PremiumScreen",
-      "Hồ sơ": "ProfileScreen",
-      "Lịch sử": "HistoryScreen",
-      "Thông báo": "NotifyScreen",
-      "Cài đặt": "OptionScreen",
-      "Trung tâm bảo mật": "SecurityScreen",
-      "Giúp": "HelpScreen",
-      "Về chúng tôi": "AboutScreen"
+        "Gói Premium": "PremiumScreen",
+        "Hồ sơ": "ProfileScreen",
+        "Lịch sử": "HistoryScreen",
+        "Thông báo": "NotifyScreen",
+        "Cài đặt": "OptionScreen",
+        "Trung tâm bảo mật": "SecurityScreen",
+        "Giúp": "HelpScreen",
+        "Về chúng tôi": "AboutScreen"
     };
 
     const screen = screenMapping[title];
-
+    
     if (screen) {
-      navigation.navigate(screen);
+        navigation.navigate(screen);
     } else {
-      await logout();
-      await Updates.reloadAsync();
-
+      await AsyncStorage.removeItem("userToken")
+      // await AsyncStorage.removeItem("@viewOnboarding")
     }
-  };
+};
   return (
     <ScrollView
       style={styles.container}
@@ -77,7 +75,7 @@ const SettingScreen = ({ navigation }) => {
       <View style={[styles.more_options_container, { width: width - 32 }]}>
         {settingOptions.map((option) => (
           <Pressable
-            style={({ pressed }) => [styles.option_container, pressed && styles.pressed]}
+            style={styles.option_container}
             key={option.id}
             onPress={() => handlePressOption(option.title)}
           >
@@ -230,7 +228,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#000000",
   },
-  pressed: {
-    backgroundColor: "rgba(154, 191, 90, 0.2)"
-  }
 });

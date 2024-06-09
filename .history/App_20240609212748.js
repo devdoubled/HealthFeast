@@ -3,18 +3,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useFonts } from "expo-font";
 import { useContext, useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import AuthStack from "./src/navigation/Auth/AuthStack";
 import MainStack from "./src/navigation/Main/MainStack";
 import LoadingScreen from "./src/screens/Intro/LoadingScreen";
 import OnboardingScreen from "./src/screens/Intro/OnboardingScreen";
 const Stack = createNativeStackNavigator();
-
-const AppContent = () => {
+export default function App() {
   const { user } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [viewOnboarding, setViewOnboarding] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
   const [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("./src/assets/fonts/Montserrat-Bold.ttf"),
     "Montserrat-Medium": require("./src/assets/fonts/Montserrat-Medium.ttf"),
@@ -52,44 +52,41 @@ const AppContent = () => {
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
-      <Stack.Navigator
-        initialRouteName={
-          user
-            ? "MainStack"
-            : viewOnboarding
-              ? "AuthStack"
-              : "OnboardingScreen"
-        }
-      >
-        <Stack.Screen
-          name="OnboardingScreen"
-          component={OnboardingScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AuthStack"
-          component={AuthStack}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="MainStack"
-          component={MainStack}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-export default function App() {
-  return (
     <AuthProvider>
-      <AppContent />
+      <NavigationContainer>
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="transparent"
+          translucent
+        />
+        <Stack.Navigator
+          initialRouteName={
+            user
+              ? "MainStack"
+              : viewOnboarding
+                ? "AuthStack"
+                : "OnboardingScreen"
+          }
+        >
+          <Stack.Screen
+            name="OnboardingScreen"
+            component={OnboardingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AuthStack"
+            component={AuthStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="MainStack"
+            component={MainStack}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({});

@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import UserAvt from "../../../assets/images/user_default.png";
 import ModalEditBMI from "../../../components/Main/Setting/ModalEditBMI";
-import { AuthContext } from "../../../context/AuthContext";
-
 const ProfileScreen = () => {
   const width = Dimensions.get("window").width;
   const { user } = useContext(AuthContext);
@@ -54,7 +52,7 @@ const ProfileScreen = () => {
         </View>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Email</Text>
-          <Text style={styles.user_name_info}>{user.email}</Text>
+          <Text style={styles.user_name_info}>tholee123@gmail.com</Text>
         </View>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Vị trí</Text>
