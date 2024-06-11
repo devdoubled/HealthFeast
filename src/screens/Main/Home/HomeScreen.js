@@ -1,6 +1,6 @@
 import moment from "moment";
 import "moment/locale/vi";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -20,13 +20,45 @@ import CircularProgress from "../../../components/Main/Home/CircularProgress";
 import Exercise from "../../../components/Main/Home/Exercise";
 import MacroBar from "../../../components/Main/Home/MacroBar";
 import Meal from "../../../components/Main/Home/Meal/Meal";
+import { AuthContext } from "../../../context/AuthContext";
 import meals from "../../../data/meals";
+import apiClient from "../../../services/apiService";
 moment.locale("vi");
+
 const HomeScreen = ({ navigation }) => {
   const width = Dimensions.get("window").width;
+  const { user } = useContext(AuthContext);
+
+  const [exerciseHistory, setExerciseHistory] = useState([]);
+  const [userStatistic, setUserStatistic] = useState({})
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const swiper = useRef();
+
+  useEffect(() => {
+    const fetchData = async (date) => {
+      try {
+        // Fetch exercise history
+        const historyResponse = await apiClient.get(`/ExerciseHistories/personal/date?date=${formatDateNow(date)}`);
+        const historyData = historyResponse.data;
+        setExerciseHistory(historyData);
+
+        // Fetch user statistic
+        const statisticResponse = await apiClient.get(`/AccountStatistics/${user.accountId}`);
+        const userStatisticData = statisticResponse.data;
+        setUserStatistic(userStatisticData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData(value);
+  }, [value])
+
+  const formatDateNow = (date) => {
+    const formattedDate = moment(date).format('YYYY-MM-DD');
+    return formattedDate;
+  };
 
   const weeks = useMemo(() => {
     const start = moment().add(week, "weeks").startOf("week");
@@ -51,7 +83,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleCaloriesTrackerPress = () => {
-    navigation.navigate("CaloriesTrackerScreen");
+    navigation.navigate("CaloriesTrackerScreen", { userStatistic: userStatistic, exerciseHistory: exerciseHistory });
   };
 
   const handleAddMealPress = () => {
@@ -59,7 +91,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handlePressExcersize = () => {
-    navigation.navigate("ExerciseScreen");
+    navigation.navigate("ExerciseScreen", { userStatistic: userStatistic });
   };
   return (
     <ScrollView
@@ -163,7 +195,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       {/* Exercise tracking */}
       <View style={[styles.exercise_tracking, { width: width - 32 }]}>
-        <Exercise handlePressExcersize={handlePressExcersize} />
+        <Exercise handlePressExcersize={handlePressExcersize} exerciseHistory={exerciseHistory} />
       </View>
       {/* Daily meal */}
       <View style={[styles.daily_meal, { width: width - 32 }]}>

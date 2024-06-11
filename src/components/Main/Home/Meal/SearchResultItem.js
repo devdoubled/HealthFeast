@@ -1,19 +1,19 @@
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-const SearchResultItem = ({ handlePressSearchResult }) => {
+const SearchResultItem = ({ handlePressSearchResult, data }) => {
   return (
     <Pressable
       style={({ pressed }) => [
         styles.result_item_container,
         pressed && styles.pressed,
       ]}
-      onPress={handlePressSearchResult}
+      onPress={() => handlePressSearchResult(data)}
     >
       <AntDesign name="pluscircle" size={28} color="#9ABF5A" />
       <View style={styles.result_text_container}>
-        <Text style={styles.result_tile}>Salad trộn</Text>
-        <Text style={styles.result_desc}>19.97 kCal - 28.33 g</Text>
+        <Text style={styles.result_tile}>{data.recipeName}</Text>
+        <Text style={styles.result_desc}>{data.totalCalories} kCal {data.weightInGram > 0 && <Text>- {data.weightInGram} g</Text>}</Text>
       </View>
     </Pressable>
   );

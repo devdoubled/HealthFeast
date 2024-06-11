@@ -3,7 +3,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Platform,
@@ -15,10 +15,42 @@ import {
   View,
 } from "react-native";
 import SearchResultItem from "../../../components/Main/Home/Meal/SearchResultItem";
-const AddMealScreen = ({navigation}) => {
+import useDebounce from "../../../hooks/useDebounce";
+import apiClient from "../../../services/apiService";
+
+const AddMealScreen = ({ navigation }) => {
   const width = Dimensions.get("window").width;
-  const handlePressSearchResult = () => {
-    navigation.navigate("MealResultDetailScreen")
+
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  const debouncedValue = useDebounce(searchValue, 300);
+
+  useEffect(() => {
+    if (!debouncedValue.trim()) {
+      setSearchResult([]);
+      return;
+    }
+
+    const fetchAPI = async () => {
+      try {
+        const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
+        setSearchResult(searchResponse.data)
+      } catch (error) {
+        console.error('Error fetching search data:', error);
+      }
+    };
+    fetchAPI();
+  }, [debouncedValue]);
+
+  const handlePressSearchResult = (meal) => {
+    navigation.navigate("MealResultDetailScreen", { meal: meal })
+  }
+
+  const handleChangeSearchInput = (search) => {
+    if (!search.startsWith(" ")) {
+      setSearchValue(search);
+    }
   }
   return (
     <View style={styles.container}>
@@ -30,6 +62,7 @@ const AddMealScreen = ({navigation}) => {
             placeholder="Tìm món ăn"
             placeholderTextColor="#FFFFFF"
             keyboardType="default"
+            onChangeText={(search) => handleChangeSearchInput(search)}
           />
         </View>
         <View style={styles.search_options_container}>
@@ -52,18 +85,21 @@ const AddMealScreen = ({navigation}) => {
             <Text style={styles.icon_text}>Scan</Text>
           </Pressable>
         </View>
-        {/* <View style={styles.no_search_result_container}>
-          <Text style={styles.no_result_text}>Không có gì được tìm thấy</Text>
-        </View> */}
-        <ScrollView
-          style={styles.search_result_container}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          <SearchResultItem handlePressSearchResult={handlePressSearchResult}/>
-          <SearchResultItem handlePressSearchResult={handlePressSearchResult}/>
-          <SearchResultItem handlePressSearchResult={handlePressSearchResult}/>
-        </ScrollView>
+        {searchResult && searchResult.length > 0 ? (
+          <ScrollView
+            style={styles.search_result_container}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
+            {searchResult.map((result) => (
+              <SearchResultItem handlePressSearchResult={handlePressSearchResult} key={result.recipeId} data={result}/>
+            ))}
+          </ScrollView>
+        ) : (
+          <View style={styles.no_search_result_container}>
+            <Text style={styles.no_result_text}>Không có gì được tìm thấy</Text>
+          </View>
+        )}
       </View>
     </View>
   );

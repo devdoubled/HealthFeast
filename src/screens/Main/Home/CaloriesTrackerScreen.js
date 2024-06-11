@@ -1,6 +1,6 @@
 import moment from "moment";
 import "moment/locale/vi";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -17,11 +17,35 @@ import PremiumIcon from "../../../assets/images/premium_icon.png";
 import RecipeIconText from "../../../assets/images/recipe_small.png";
 import CaloriesProgress from "../../../components/Main/Home/CaloriesTracker/CaloriesProgress";
 import MealBar from "../../../components/Main/Home/CaloriesTracker/MealBar";
-const CaloriesTrackerScreen = () => {
+import apiClient from "../../../services/apiService";
+const CaloriesTrackerScreen = ({ route }) => {
   const width = Dimensions.get("window").width;
+  const { userStatistic } = route.params;
+  const [exerciseHistory, setExerciseHistory] = useState([]);
+
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const swiper = useRef();
+
+  useEffect(() => {
+    const fetchData = async (date) => {
+      try {
+        // Fetch exercise history
+        const historyResponse = await apiClient.get(`/ExerciseHistories/personal/date?date=${formatDateNow(date)}`);
+        const historyData = historyResponse.data;
+        setExerciseHistory(historyData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData(value);
+  }, [value])
+
+  const formatDateNow = (date) => {
+    const formattedDate = moment(date).format('YYYY-MM-DD');
+    return formattedDate;
+  };
 
   const weeks = useMemo(() => {
     const start = moment().add(week, "weeks").startOf("week");
@@ -43,6 +67,10 @@ const CaloriesTrackerScreen = () => {
     return moment(date)
       .format("dddd D-MM-YYYY")
       .replace(/^./, (str) => str.toUpperCase());
+  };
+
+  const roundToDecimal = (value) => {
+    return Math.round(value);
   };
 
   return (
@@ -125,20 +153,22 @@ const CaloriesTrackerScreen = () => {
           </Text>
         </View>
         <View style={styles.progress_tracker}>
-          <CaloriesProgress eaten={1000} target={1500} />
+          <CaloriesProgress eaten={roundToDecimal(userStatistic.tdee) - 1256 + exerciseHistory.totalCalBurned} target={roundToDecimal(userStatistic.tdee)} />
         </View>
         <View style={styles.meal_tracker}>
           <View style={styles.tracker}>
-            <MealBar label={"Ăn sáng"} value={200} maxValue={500} />
-            <MealBar label={"Ăn trưa"} value={200} maxValue={500} />
+            <MealBar label={"Ăn sáng"} value={200} maxValue={roundToDecimal(userStatistic.tdee * 0.25)} />
+            <MealBar label={"Ăn trưa"} value={200} maxValue={roundToDecimal(userStatistic.tdee * 0.35)} />
           </View>
           <View style={styles.tracker}>
-            <MealBar label={"Ăn vặt"} value={200} maxValue={500} />
-            <MealBar label={"Ăn tối"} value={200} maxValue={500} />
+            <MealBar label={"Ăn vặt"} value={200} maxValue={roundToDecimal(userStatistic.tdee * 0.2)} />
+            <MealBar label={"Ăn tối"} value={200} maxValue={roundToDecimal(userStatistic.tdee * 0.2)} />
           </View>
         </View>
         <View style={styles.explain_container}>
-          <Text style={styles.calculate}>1500 = 1500 - 0 + 1500</Text>
+          <Text style={styles.calculate}>
+            {roundToDecimal(userStatistic.tdee) - 1256 + exerciseHistory.totalCalBurned} = {roundToDecimal(userStatistic.tdee)} - 1256 + {exerciseHistory.totalCalBurned}
+          </Text>
           <Text style={styles.explain}>
             Duy trì = Mục tiêu - Ăn vào + Đốt cháy
           </Text>
@@ -146,16 +176,16 @@ const CaloriesTrackerScreen = () => {
       </View>
       <View style={[styles.calories_tracker, { width: width - 32 }]}>
         <View style={styles.total_calories}>
-          <Text style={styles.total_calories_text}>Tổng calo</Text>
+          <Text style={styles.total_calories_text}>Tổng calo ăn vào</Text>
           <Text style={styles.total_calories_number}>500</Text>
         </View>
         <View style={styles.net_calories}>
-          <Text style={styles.net_calories_text}>Lượng calo ròng</Text>
-          <Text style={styles.net_calories_number}>800</Text>
+          <Text style={styles.net_calories_text}>Lượng calo đốt cháy</Text>
+          <Text style={styles.net_calories_number}>{exerciseHistory.totalCalBurned}</Text>
         </View>
         <View style={styles.target_calories}>
           <Text style={styles.target_calories_text}>Mục tiêu</Text>
-          <Text style={styles.target_calories_number}>1500</Text>
+          <Text style={styles.target_calories_number}>{roundToDecimal(userStatistic.tdee)}</Text>
         </View>
       </View>
       <View style={[styles.premium_container, { width: width - 32 }]}>

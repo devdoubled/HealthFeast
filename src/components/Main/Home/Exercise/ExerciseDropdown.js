@@ -2,12 +2,13 @@ import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
-const ExerciseDropdown = ({ data, setValueExercise }) => {
+const ExerciseDropdown = ({ data, setValueExercise, setTypeExercise }) => {
   const [value, setValue] = useState("Lựa chọn");
   const [isShowDropdown, setIsShowDropdown] = useState(false);
 
   const hanldePressDropdownItem = (item) => {
     setValue(item.label);
+    setTypeExercise(item.label)
     setValueExercise(item.value)
     setIsShowDropdown(false);
   };
