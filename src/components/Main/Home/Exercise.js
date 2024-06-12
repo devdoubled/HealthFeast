@@ -12,7 +12,7 @@ const Exercise = ({handlePressExcersize, exerciseHistory}) => {
         return `${hours} Hr`;
       }
     } else {
-      return `${minutes}`;
+      return `${minutes} Min`;
     }
   }
   return (
@@ -22,11 +22,11 @@ const Exercise = ({handlePressExcersize, exerciseHistory}) => {
           <View style={styles.exercise_detail}>
             <View style={styles.exercise_calo}>
               <MaterialIcons name="local-fire-department" size={24} color="#E55733" />
-              <Text style={styles.burn_text}>{exerciseHistory.totalCalBurned} kCal</Text>
+              <Text style={styles.burn_text}>{exerciseHistory?.totalCalBurned || 0} kCal</Text>
             </View>
             <View style={styles.exercise_time}>
             <MaterialIcons name="access-time" size={24} color="#E55733" />
-              <Text style={styles.time_text}>{convertTime(exerciseHistory.totalDuration)}</Text>
+              <Text style={styles.time_text}>{convertTime(exerciseHistory?.totalDuration || 0)}</Text>
             </View>
           </View>
         </View>

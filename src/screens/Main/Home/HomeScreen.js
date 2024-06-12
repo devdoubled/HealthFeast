@@ -28,32 +28,84 @@ moment.locale("vi");
 const HomeScreen = ({ navigation }) => {
   const width = Dimensions.get("window").width;
   const { user } = useContext(AuthContext);
-
-  const [exerciseHistory, setExerciseHistory] = useState([]);
   const [userStatistic, setUserStatistic] = useState({})
+  const [exerciseHistory, setExerciseHistory] = useState({
+    totalCalBurned: 0,
+    totalDuration: 0
+  });
+  const [mealStatisticHistory, setMealStatisticHistory] = useState({
+    totalCalories: 0,
+    totalCarb: 0,
+    totalFat: 0,
+    totalProtein: 0,
+  })
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const swiper = useRef();
 
   useEffect(() => {
-    const fetchData = async (date) => {
+    const fetchUserStatistic = async () => {
       try {
-        // Fetch exercise history
-        const historyResponse = await apiClient.get(`/ExerciseHistories/personal/date?date=${formatDateNow(date)}`);
-        const historyData = historyResponse.data;
-        setExerciseHistory(historyData);
-
-        // Fetch user statistic
         const statisticResponse = await apiClient.get(`/AccountStatistics/${user.accountId}`);
         const userStatisticData = statisticResponse.data;
         setUserStatistic(userStatisticData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        setUserStatistic(null);
       }
     };
-
-    fetchData(value);
-  }, [value])
+  
+    fetchUserStatistic();
+  }, [user.accountId]);
+  
+  useEffect(() => {
+    const fetchExerciseData = async (date) => {
+      try {
+        const formattedDate = formatDateNow(date);
+        const historyResponse = await apiClient.get(`/ExerciseHistories/personal/date?date=${formattedDate}`);
+        const historyData = historyResponse.data;
+        
+        if (historyData) {
+          setExerciseHistory({
+            totalCalBurned: historyData.totalCalBurned,
+            totalDuration: historyData.totalDuration
+          });
+        }
+      } catch (error) {
+        setExerciseHistory({
+          totalCalBurned: 0,
+          totalDuration: 0
+        });
+      }
+    };
+  
+    fetchExerciseData(value);
+  }, [value]);
+  
+  useEffect(() => {
+    const fetchMealData = async (date) => {
+      try {
+        const formattedDate = formatDateNow(date);
+        const mealHistoryResponse = await apiClient.get(`/MealHistories/personal/date?date=${formattedDate}`);
+        const mealData = mealHistoryResponse.data;
+        
+        setMealStatisticHistory({
+          totalCalories: mealData.totalCalories,
+          totalCarb: mealData.totalCarb,
+          totalFat: mealData.totalFat,
+          totalProtein: mealData.totalProtein,
+        });
+      } catch (error) {
+        setMealStatisticHistory({
+          totalCalories: 0,
+          totalCarb: 0,
+          totalFat: 0,
+          totalProtein: 0,
+        });
+      }
+    };
+  
+    fetchMealData(value);
+  }, [value]);  
 
   const formatDateNow = (date) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
@@ -83,16 +135,21 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleCaloriesTrackerPress = () => {
-    navigation.navigate("CaloriesTrackerScreen", { userStatistic: userStatistic, exerciseHistory: exerciseHistory });
+    navigation.navigate("CaloriesTrackerScreen", { userStatistic: userStatistic, date: value.toISOString() });
   };
 
-  const handleAddMealPress = () => {
-    navigation.navigate("AddMealScreen");
+  const handleAddMealPress = (mealId) => {
+    navigation.navigate("AddMealScreen", { mealId: mealId });
   };
 
   const handlePressExcersize = () => {
     navigation.navigate("ExerciseScreen", { userStatistic: userStatistic });
   };
+
+  const roundToDecimal = (value) => {
+    return Math.round(value);
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -181,7 +238,7 @@ const HomeScreen = ({ navigation }) => {
           <Image source={EatenIcon} style={styles.eaten_img} />
           <Text style={styles.eaten_text}>Nạp vào</Text>
         </View>
-        <CircularProgress eaten={1000} target={1500} />
+        <CircularProgress eaten={roundToDecimal(userStatistic.tdee) - (mealStatisticHistory?.totalCalories || 0) + exerciseHistory.totalCalBurned} target={roundToDecimal(userStatistic.tdee)} />
         <View style={styles.burned}>
           <Image source={BurnedIcon} style={styles.burned_img} />
           <Text style={styles.burned_text}>Đốt cháy</Text>

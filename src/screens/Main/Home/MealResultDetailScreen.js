@@ -10,11 +10,12 @@ import {
   Text,
   View,
 } from "react-native";
-import ModalAddMeal from "../../../components/Main/Search/ModalAddMeal";
+import ModalAddMealSuccess from "../../../components/Main/Home/Meal/ModalAddMealSuccess";
+import apiClient from "../../../services/apiService";
 moment.locale("vi");
 
 const MealResultDetailScreen = ({ route }) => {
-  const { meal } = route.params;
+  const { meal, mealId } = route.params;
   const width = Dimensions.get("window").width;
   const [valueCalories, setValueCalories] = useState(meal.totalCalories);
   const [valueCarb, setValueCarb] = useState(meal.totalCarb)
@@ -22,7 +23,8 @@ const MealResultDetailScreen = ({ route }) => {
   const [valueFat, setValueFat] = useState(meal.totalFat)
   const [valueChooseCalories, setValueChooseCalories] = useState(100);
   const [wishlistIcon, setWishlistIcon] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalSuccessVisible, setModalSuccessVisible] = useState(false);
+
   const handlePressMinusValueCalories = () => {
     if (valueChooseCalories <= 0) {
       return;
@@ -52,11 +54,11 @@ const MealResultDetailScreen = ({ route }) => {
     setWishlistIcon(!wishlistIcon)
   };
 
-  const handleCloseModal = () => {
-    setModalVisible(false)
+  const handleCloseModalSuccess = () => {
+    setModalSuccessVisible(false)
   }
 
-  const handleAddMealBreakfast = () => {
+  const handleAddMeal = async () => {
     const mealData = {
       recipeId: meal.recipeId,
       quantity: valueChooseCalories,
@@ -66,24 +68,15 @@ const MealResultDetailScreen = ({ route }) => {
       calProtein: roundToOneDecimal(valueProtein),
       mealName: meal.recipeName,
       image: meal.images[0].imagePath,
-      mealTime: 0,
+      mealTime: mealId,
       date: formatDate()
     }
-
-    console.log(mealData)
-  }
-
-
-  const handleAddMealLunch = () => {
-
-  }
-
-  const handleAddMealDinner = () => {
-
-  }
-
-  const handleAddMealSnack = () => {
-
+    try {
+      await apiClient.post('/Meals/database', mealData);
+      setModalSuccessVisible(true)
+    } catch (error) {
+      console.log("Error add breakfast meal:", error)
+    }
   }
 
   const formatDate = () => {
@@ -113,7 +106,7 @@ const MealResultDetailScreen = ({ route }) => {
           <Text style={styles.meal_size}>Trọng lượng</Text>
           <View style={styles.choose_size_container}>
             <View style={styles.calories}>
-              <Text style={styles.calories_text}>{valueCalories} kCal</Text>
+              <Text style={styles.calories_text}>{Math.round(valueCalories)} kCal</Text>
             </View>
             <View style={styles.choose_calories}>
               <Pressable
@@ -151,7 +144,7 @@ const MealResultDetailScreen = ({ route }) => {
                 styles.add_btn,
                 pressed && styles.pressed,
               ]}
-              onPress={() => setModalVisible(true)}
+              onPress={handleAddMeal}
             >
               <Text style={styles.add_text}>Thêm món ăn</Text>
             </Pressable>
@@ -167,13 +160,7 @@ const MealResultDetailScreen = ({ route }) => {
           </View>
         </View>
       </View>
-      <ModalAddMeal
-        visible={modalVisible}
-        handleCloseModal={handleCloseModal}
-        handleAddMealBreakfast={handleAddMealBreakfast}
-        handleAddMealLunch={handleAddMealLunch}
-        handleAddMealDinner={handleAddMealDinner}
-        handleAddMealSnack={handleAddMealSnack} />
+      <ModalAddMealSuccess visible={modalSuccessVisible} handleCloseModal={handleCloseModalSuccess} />
     </View>
   );
 };
