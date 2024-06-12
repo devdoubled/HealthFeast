@@ -14,7 +14,7 @@ const MacroBar = ({ label, value, maxValue, color }) => {
           ]}
         />
       </View>
-      <Text style={styles.value}>{`${maxValue - value < 0 ? maxValue : maxValue - value}g ${maxValue - value < 0 ? "tối đa" : "còn lại"}`}</Text>
+      <Text style={styles.value}>{`${maxValue - value }g còn lại`}</Text>
     </View>
   );
 };

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
   const getMealData = (mealId, mealData) => {
     switch (mealId) {
@@ -17,11 +17,12 @@ const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
     }
   };
   const mealItems = getMealData(meal.id, mealData);
+  console.log(mealItems);
   return (
     <View style={[styles.meal_container, { width: width - 32 }]}>
       <Text style={styles.meal_type}>{meal.meal}</Text>
       <Text style={styles.meal_desc}>{meal.meal_desc}</Text>
-      <View style={styles.list_meal}>
+      {/* <View style={styles.list_meal}>
         {mealItems.length > 0 && mealItems.map((mealItem) => (
           <View style={styles.meal_item} key={mealItem.mealId}>
             <Image style={styles.meal_item_img} source={{ url: mealItem.image }} />
@@ -31,7 +32,7 @@ const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
             </View>
           </View>
         ))}
-      </View>
+      </View> */}
       <Pressable
         style={({ pressed }) => [
           styles.meal_add,

@@ -1,36 +1,26 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
-  const getMealData = (mealId, mealData) => {
-    switch (mealId) {
-      case 1:
-        return mealData.breakfast || [];
-      case 2:
-        return mealData.lunch || [];
-      case 3:
-        return mealData.dinner || [];
-      case 4:
-        return mealData.snack || [];
-      default:
-        return [];
-    }
-  };
-  const mealItems = getMealData(meal.id, mealData);
+const Meal = ({ width, meal, handleAddMealPress }) => {
   return (
     <View style={[styles.meal_container, { width: width - 32 }]}>
       <Text style={styles.meal_type}>{meal.meal}</Text>
       <Text style={styles.meal_desc}>{meal.meal_desc}</Text>
       <View style={styles.list_meal}>
-        {mealItems.length > 0 && mealItems.map((mealItem) => (
-          <View style={styles.meal_item} key={mealItem.mealId}>
-            <Image style={styles.meal_item_img} source={{ url: mealItem.image }} />
-            <View style={styles.meal_item_content}>
-              <Text style={styles.meal_item_name}>{mealItem.mealName}</Text>
-              <Text style={styles.meal_item_calories}>{mealItem.calCalories} kCal</Text>
-            </View>
+        <View style={styles.meal_item}>
+          <Image style={styles.meal_item_img} source={{url: "https://data-service.pharmacity.io/pmc-upload-media/production/pmc-ecm-asm/blog/com-trang-bao-nhieu-calo.webp"}}/>
+          <View style={styles.meal_item_content}>
+            <Text style={styles.meal_item_name}>Cơm</Text>
+            <Text style={styles.meal_item_calories}>189 kCal</Text>
           </View>
-        ))}
+        </View>
+        <View style={styles.meal_item}>
+          <Image style={styles.meal_item_img} source={{url: "https://data-service.pharmacity.io/pmc-upload-media/production/pmc-ecm-asm/blog/com-trang-bao-nhieu-calo.webp"}}/>
+          <View style={styles.meal_item_content}>
+            <Text style={styles.meal_item_name}>Cơm</Text>
+            <Text style={styles.meal_item_calories}>189 kCal</Text>
+          </View>
+        </View>
       </View>
       <Pressable
         style={({ pressed }) => [

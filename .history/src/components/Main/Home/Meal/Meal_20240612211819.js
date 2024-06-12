@@ -5,13 +5,13 @@ const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
   const getMealData = (mealId, mealData) => {
     switch (mealId) {
       case 1:
-        return mealData.breakfast || [];
+        return mealData.breakfast;
       case 2:
-        return mealData.lunch || [];
+        return mealData.lunch;
       case 3:
-        return mealData.dinner || [];
+        return mealData.dinner;
       case 4:
-        return mealData.snack || [];
+        return mealData.snack;
       default:
         return [];
     }

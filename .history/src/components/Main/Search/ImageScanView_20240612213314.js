@@ -51,7 +51,7 @@ const ImageScanView = ({ scanResult, image, goBackPrevScreen }) => {
             <NutritionProgress
               label="Béo"
               color="#FFC700"
-              nutrition={scanResult?.fat || 0}
+              nutrition={scanResult?.Fat || 0}
               target={100}
             />
           </View>

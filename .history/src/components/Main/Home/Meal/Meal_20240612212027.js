@@ -5,23 +5,24 @@ const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
   const getMealData = (mealId, mealData) => {
     switch (mealId) {
       case 1:
-        return mealData.breakfast || [];
+        return mealData.breakfast;
       case 2:
-        return mealData.lunch || [];
+        return mealData.lunch;
       case 3:
-        return mealData.dinner || [];
+        return mealData.dinner;
       case 4:
-        return mealData.snack || [];
+        return mealData.snack;
       default:
         return [];
     }
   };
   const mealItems = getMealData(meal.id, mealData);
+  console.log(meal);
   return (
     <View style={[styles.meal_container, { width: width - 32 }]}>
       <Text style={styles.meal_type}>{meal.meal}</Text>
       <Text style={styles.meal_desc}>{meal.meal_desc}</Text>
-      <View style={styles.list_meal}>
+      {/* <View style={styles.list_meal}>
         {mealItems.length > 0 && mealItems.map((mealItem) => (
           <View style={styles.meal_item} key={mealItem.mealId}>
             <Image style={styles.meal_item_img} source={{ url: mealItem.image }} />
@@ -31,7 +32,7 @@ const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
             </View>
           </View>
         ))}
-      </View>
+      </View> */}
       <Pressable
         style={({ pressed }) => [
           styles.meal_add,

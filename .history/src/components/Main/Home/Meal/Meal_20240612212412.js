@@ -17,6 +17,7 @@ const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
     }
   };
   const mealItems = getMealData(meal.id, mealData);
+  console.log(mealItems);
   return (
     <View style={[styles.meal_container, { width: width - 32 }]}>
       <Text style={styles.meal_type}>{meal.meal}</Text>

@@ -26,7 +26,7 @@ const ImageScanView = ({ scanResult, image, goBackPrevScreen }) => {
       <View style={styles.scan_result_container}>
         <View style={styles.rusult_title}>
           <Text style={styles.title_desc}>Báo cáo thức ăn</Text>
-          <Text style={styles.title}>{scanResult?.name || 'Undefined'}</Text>
+          <Text style={styles.title}>{scanResult?.Name || 'Undefined'}</Text>
         </View>
         <View style={styles.result_calo}>
           <Text style={styles.calo_title}>Tổng lượng calo</Text>
@@ -38,20 +38,20 @@ const ImageScanView = ({ scanResult, image, goBackPrevScreen }) => {
             <NutritionProgress
               label="Tinh bột"
               color="#9ABF5A"
-              nutrition={scanResult?.carbs || 0}
+              nutrition={scanResult?.Carbs || 0}
               target={100}
             />
             <NutritionProgress
               label="Đạm"
               color="#E55733"
-              nutrition={scanResult?.protein || 0}
+              nutrition={scanResult?.Protein || 0}
               target={100}
               isMiddle={true}
             />
             <NutritionProgress
               label="Béo"
               color="#FFC700"
-              nutrition={scanResult?.fat || 0}
+              nutrition={scanResult?.Fat || 0}
               target={100}
             />
           </View>

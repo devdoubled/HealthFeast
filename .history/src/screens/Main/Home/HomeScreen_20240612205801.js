@@ -39,6 +39,10 @@ const HomeScreen = ({ navigation }) => {
     totalFat: 0,
     totalProtein: 0,
   })
+  const [mealBreakfastHistory, setMealBreakfastHistory] = useState([])
+  const [mealLunchHistory, setMealLunchHistory] = useState([])
+  const [mealDinnerHistory, setMealDinnerHistory] = useState([])
+  const [mealSnackHistory, setMealSnackHistory] = useState([])
   const [mealHistories, setMealHistories] = useState({
     breakfast: null,
     lunch: null,
@@ -95,12 +99,14 @@ const HomeScreen = ({ navigation }) => {
         const mealData = mealHistoryResponse.data;
         const filterMealsByTime = (mealTime) => mealData.meals.filter(meal => meal.mealTime === mealTime);
         if (mealData) {
-          setMealHistories({
-            breakfast: filterMealsByTime(1),
-            lunch: filterMealsByTime(2),
-            dinner: filterMealsByTime(3),
-            snack: filterMealsByTime(4),
-          });
+          const breakfast = mealData.meals.filter(meal => meal.mealTime === 1)
+          const lunch = mealData.meals.filter(meal => meal.mealTime === 2)
+          const dinner = mealData.meals.filter(meal => meal.mealTime === 3)
+          const snack = mealData.meals.filter(meal => meal.mealTime === 4)
+          setMealBreakfastHistory(breakfast)
+          setMealLunchHistory(lunch)
+          setMealDinnerHistory(dinner)
+          setMealSnackHistory(snack)
         }
         setMealStatisticHistory({
           totalCalories: mealData.totalCalories,
@@ -260,9 +266,9 @@ const HomeScreen = ({ navigation }) => {
       </Pressable>
       {/* Macro tracking */}
       <View style={[styles.macro_tracking, { width: width - 32 }]}>
-        <MacroBar label="Tinh bột" value={Math.round(mealStatisticHistory.totalCarb)} maxValue={Math.round(userStatistic.carbRecommended)} color="#9ABF5A" />
-        <MacroBar label="Đạm" value={Math.round(mealStatisticHistory.totalProtein)} maxValue={Math.round(userStatistic.proteinRecommended)} color="#B266FD" />
-        <MacroBar label="Chất béo" value={Math.round(mealStatisticHistory.totalFat)} maxValue={Math.round(userStatistic.fatRecommended)} color="#5285E8" />
+        <MacroBar label="Tinh bột" value={150} maxValue={300} color="#9ABF5A" />
+        <MacroBar label="Đạm" value={150} maxValue={300} color="#B266FD" />
+        <MacroBar label="Chất béo" value={150} maxValue={300} color="#5285E8" />
       </View>
       {/* Exercise tracking */}
       <View style={[styles.exercise_tracking, { width: width - 32 }]}>
@@ -276,7 +282,6 @@ const HomeScreen = ({ navigation }) => {
             width={width}
             key={meal.id}
             meal={meal}
-            mealData={mealHistories}
             handleAddMealPress={handleAddMealPress}
           />
         ))}

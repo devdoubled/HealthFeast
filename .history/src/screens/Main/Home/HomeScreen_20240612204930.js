@@ -39,12 +39,6 @@ const HomeScreen = ({ navigation }) => {
     totalFat: 0,
     totalProtein: 0,
   })
-  const [mealHistories, setMealHistories] = useState({
-    breakfast: null,
-    lunch: null,
-    dinner: null,
-    snack: null,
-  })
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
   const swiper = useRef();
@@ -59,17 +53,17 @@ const HomeScreen = ({ navigation }) => {
         setUserStatistic(null);
       }
     };
-
+  
     fetchUserStatistic();
   }, [user.accountId]);
-
+  
   useEffect(() => {
     const fetchExerciseData = async (date) => {
       try {
         const formattedDate = formatDateNow(date);
         const historyResponse = await apiClient.get(`/ExerciseHistories/personal/date?date=${formattedDate}`);
         const historyData = historyResponse.data;
-
+        
         if (historyData) {
           setExerciseHistory({
             totalCalBurned: historyData.totalCalBurned,
@@ -83,24 +77,19 @@ const HomeScreen = ({ navigation }) => {
         });
       }
     };
-
+  
     fetchExerciseData(value);
   }, [value]);
-
+  
   useEffect(() => {
     const fetchMealData = async (date) => {
       try {
         const formattedDate = formatDateNow(date);
         const mealHistoryResponse = await apiClient.get(`/MealHistories/personal/date?date=${formattedDate}`);
         const mealData = mealHistoryResponse.data;
-        const filterMealsByTime = (mealTime) => mealData.meals.filter(meal => meal.mealTime === mealTime);
-        if (mealData) {
-          setMealHistories({
-            breakfast: filterMealsByTime(1),
-            lunch: filterMealsByTime(2),
-            dinner: filterMealsByTime(3),
-            snack: filterMealsByTime(4),
-          });
+        if(mealData) {
+          const breakfast = mealData.meals.filter(meal => meal.mealTime === 1)
+          console.log(breakfast)
         }
         setMealStatisticHistory({
           totalCalories: mealData.totalCalories,
@@ -117,9 +106,9 @@ const HomeScreen = ({ navigation }) => {
         });
       }
     };
-
+  
     fetchMealData(value);
-  }, [value]);
+  }, [value]);  
 
   const formatDateNow = (date) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
@@ -260,9 +249,9 @@ const HomeScreen = ({ navigation }) => {
       </Pressable>
       {/* Macro tracking */}
       <View style={[styles.macro_tracking, { width: width - 32 }]}>
-        <MacroBar label="Tinh bột" value={Math.round(mealStatisticHistory.totalCarb)} maxValue={Math.round(userStatistic.carbRecommended)} color="#9ABF5A" />
-        <MacroBar label="Đạm" value={Math.round(mealStatisticHistory.totalProtein)} maxValue={Math.round(userStatistic.proteinRecommended)} color="#B266FD" />
-        <MacroBar label="Chất béo" value={Math.round(mealStatisticHistory.totalFat)} maxValue={Math.round(userStatistic.fatRecommended)} color="#5285E8" />
+        <MacroBar label="Tinh bột" value={150} maxValue={300} color="#9ABF5A" />
+        <MacroBar label="Đạm" value={150} maxValue={300} color="#B266FD" />
+        <MacroBar label="Chất béo" value={150} maxValue={300} color="#5285E8" />
       </View>
       {/* Exercise tracking */}
       <View style={[styles.exercise_tracking, { width: width - 32 }]}>
@@ -276,7 +265,6 @@ const HomeScreen = ({ navigation }) => {
             width={width}
             key={meal.id}
             meal={meal}
-            mealData={mealHistories}
             handleAddMealPress={handleAddMealPress}
           />
         ))}
