@@ -2,7 +2,7 @@ import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import ModalAddImg from "../../../assets/images/modal_add.png";
-const ModalAddMeal = ({ visible, handleCloseModal, handleAddMealBreakfast, handleAddMealLunch, handleAddMealDinner, handleAddMealSnack }) => {
+const ModalAddMeal = ({ visible, item = {}, handleCloseModal, handleAddMeal }) => {
   return (
     <Modal
       animationType="fade"
@@ -28,7 +28,7 @@ const ModalAddMeal = ({ visible, handleCloseModal, handleAddMealBreakfast, handl
                 styles.choose_btn,
                 pressed && styles.pressed,
               ]}
-              onPress={handleAddMealBreakfast}
+              onPress={() => handleAddMeal(item, 1)}
             >
               <Text style={styles.choose_text}>Bữa ăn sáng</Text>
             </Pressable>
@@ -37,7 +37,7 @@ const ModalAddMeal = ({ visible, handleCloseModal, handleAddMealBreakfast, handl
                 styles.choose_btn,
                 pressed && styles.pressed,
               ]}
-              onPress={handleAddMealLunch}
+              onPress={() => handleAddMeal(item, 2)}
             >
               <Text style={styles.choose_text}>Bữa ăn trưa</Text>
             </Pressable>
@@ -46,7 +46,7 @@ const ModalAddMeal = ({ visible, handleCloseModal, handleAddMealBreakfast, handl
                 styles.choose_btn,
                 pressed && styles.pressed,
               ]}
-              onPress={handleAddMealDinner}
+              onPress={() => handleAddMeal(item, 3)}
             >
               <Text style={styles.choose_text}>Bữa ăn tối</Text>
             </Pressable>
@@ -55,7 +55,7 @@ const ModalAddMeal = ({ visible, handleCloseModal, handleAddMealBreakfast, handl
                 styles.choose_btn,
                 pressed && styles.pressed,
               ]}
-              onPress={handleAddMealSnack}
+              onPress={() => handleAddMeal(item, 4)}
             >
               <Text style={styles.choose_text}>Bữa ăn vặt</Text>
             </Pressable>
