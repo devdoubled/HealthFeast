@@ -32,57 +32,36 @@ const RecipeScreen = ({ navigation, route }) => {
   const debouncedValue = useDebounce(searchValue, 300);
 
   useEffect(() => {
-    if (debouncedValue.trim()) {
-      const fetchAPI = async () => {
-        try {
-          setIsLoading(true);
-          const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
-          setRecipes(searchResponse.data);
-          setHasMore(false); 
-        } catch (error) {
-          console.error('Error fetching search data:', error);
-        } finally {
-          setIsLoading(false);
-          setRefreshing(false);
+    const fetchRecipes = async () => {
+      try {
+        setIsLoading(true);
+        const response = debouncedValue.trim()
+          ? await apiClient.get(`/Recipes/name?name=${debouncedValue}`)
+          : await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
+        
+        const newRecipes = debouncedValue.trim() ? response.data : response.data.items;
+
+        setRecipes((prevRecipes) => debouncedValue.trim() ? newRecipes : [...prevRecipes, ...newRecipes]);
+
+        if (!debouncedValue.trim() && newRecipes.length < pageSize) {
+          setHasMore(false);
         }
-      };
-      fetchAPI();
-    } else {
-      fetchRecipes(1, true);
-    }
-  }, [debouncedValue]);
-
-  useEffect(() => {
-    fetchRecipes(page);
-  }, [page]);
-
-  const fetchRecipes = async (page, reset = false) => {
-    if (!hasMore && !reset) return;
-
-    try {
-      setIsLoading(true);
-      const response = await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
-      const newRecipes = response.data.items;
-
-      if (newRecipes.length < pageSize) {
-        setHasMore(false);
+      } catch (error) {
+        console.error('Error fetching recipes:', error);
+      } finally {
+        setIsLoading(false);
+        setRefreshing(false);
       }
+    };
 
-      setRecipes((prevRecipes) => reset ? newRecipes : [...prevRecipes, ...newRecipes]);
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
-    } finally {
-      setIsLoading(false);
-      setRefreshing(false);
-    }
-  };
+    fetchRecipes();
+  }, [debouncedValue, page]);
 
   const onRefresh = () => {
     setRefreshing(true);
     setPage(1);
     setRecipes([]);
     setHasMore(true);
-    fetchRecipes(1, true);
   };
 
   const handleLoadMore = () => {

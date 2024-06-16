@@ -32,35 +32,30 @@ const RecipeScreen = ({ navigation, route }) => {
   const debouncedValue = useDebounce(searchValue, 300);
 
   useEffect(() => {
-    if (debouncedValue.trim()) {
-      const fetchAPI = async () => {
-        try {
-          setIsLoading(true);
-          const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
-          setRecipes(searchResponse.data);
-          setHasMore(false); 
-        } catch (error) {
-          console.error('Error fetching search data:', error);
-        } finally {
-          setIsLoading(false);
-          setRefreshing(false);
-        }
-      };
-      fetchAPI();
-    } else {
-      fetchRecipes(1, true);
+    if (!debouncedValue.trim()) {
+      setRecipes([]);
+      return;
     }
+
+    const fetchAPI = async () => {
+      try {
+        const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
+        setRecipes(searchResponse.data)
+      } catch (error) {
+        console.error('Error fetching search data:', error);
+      }
+    };
+    fetchAPI();
   }, [debouncedValue]);
 
   useEffect(() => {
     fetchRecipes(page);
   }, [page]);
 
-  const fetchRecipes = async (page, reset = false) => {
-    if (!hasMore && !reset) return;
+  const fetchRecipes = async (page) => {
+    if (!hasMore) return;
 
     try {
-      setIsLoading(true);
       const response = await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
       const newRecipes = response.data.items;
 
@@ -68,7 +63,7 @@ const RecipeScreen = ({ navigation, route }) => {
         setHasMore(false);
       }
 
-      setRecipes((prevRecipes) => reset ? newRecipes : [...prevRecipes, ...newRecipes]);
+      setRecipes((prevRecipes) => [...prevRecipes, ...newRecipes]);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -82,7 +77,6 @@ const RecipeScreen = ({ navigation, route }) => {
     setPage(1);
     setRecipes([]);
     setHasMore(true);
-    fetchRecipes(1, true);
   };
 
   const handleLoadMore = () => {

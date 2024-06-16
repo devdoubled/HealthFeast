@@ -105,7 +105,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
     setPage(1);
     setMenuList([]);
     setHasMore(true);
-    
   };
 
   const handleLoadMore = () => {

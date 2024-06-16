@@ -17,7 +17,6 @@ import {
 import RecipeIconText from "../../../assets/images/activity_very.png";
 import NavbarList from "../../../components/Main/Recipe/NavbarList";
 import RecipeItem from "../../../components/Main/Recipe/RecipeItem";
-import useDebounce from "../../../hooks/useDebounce";
 import apiClient from './../../../services/apiService';
 const RecipeScreen = ({ navigation, route }) => {
   const width = Dimensions.get("window").width;
@@ -26,41 +25,16 @@ const RecipeScreen = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
   const pageSize = 6;
-
-  const debouncedValue = useDebounce(searchValue, 300);
-
-  useEffect(() => {
-    if (debouncedValue.trim()) {
-      const fetchAPI = async () => {
-        try {
-          setIsLoading(true);
-          const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
-          setRecipes(searchResponse.data);
-          setHasMore(false); 
-        } catch (error) {
-          console.error('Error fetching search data:', error);
-        } finally {
-          setIsLoading(false);
-          setRefreshing(false);
-        }
-      };
-      fetchAPI();
-    } else {
-      fetchRecipes(1, true);
-    }
-  }, [debouncedValue]);
 
   useEffect(() => {
     fetchRecipes(page);
   }, [page]);
 
-  const fetchRecipes = async (page, reset = false) => {
-    if (!hasMore && !reset) return;
+  const fetchRecipes = async (page) => {
+    if (!hasMore) return;
 
     try {
-      setIsLoading(true);
       const response = await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
       const newRecipes = response.data.items;
 
@@ -68,7 +42,7 @@ const RecipeScreen = ({ navigation, route }) => {
         setHasMore(false);
       }
 
-      setRecipes((prevRecipes) => reset ? newRecipes : [...prevRecipes, ...newRecipes]);
+      setRecipes((prevRecipes) => [...prevRecipes, ...newRecipes]);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -82,7 +56,6 @@ const RecipeScreen = ({ navigation, route }) => {
     setPage(1);
     setRecipes([]);
     setHasMore(true);
-    fetchRecipes(1, true);
   };
 
   const handleLoadMore = () => {
@@ -90,12 +63,6 @@ const RecipeScreen = ({ navigation, route }) => {
       setPage((prevPage) => prevPage + 1);
     }
   };
-
-  const handleChangeSearchInput = (search) => {
-    if (!search.startsWith(" ")) {
-      setSearchValue(search);
-    }
-  }
 
   return (
     <View style={styles.container}>
@@ -113,7 +80,6 @@ const RecipeScreen = ({ navigation, route }) => {
           placeholder="Tìm món ăn"
           placeholderTextColor="#B4B4B4"
           keyboardType="default"
-          onChangeText={(search) => handleChangeSearchInput(search)}
         />
         <Ionicons name="search" size={28} color="#B4B4B4" />
       </View>

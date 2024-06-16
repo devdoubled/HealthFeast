@@ -38,7 +38,7 @@ const RecipeScreen = ({ navigation, route }) => {
           setIsLoading(true);
           const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
           setRecipes(searchResponse.data);
-          setHasMore(false); 
+          setHasMore(false); // No need to load more when searching
         } catch (error) {
           console.error('Error fetching search data:', error);
         } finally {

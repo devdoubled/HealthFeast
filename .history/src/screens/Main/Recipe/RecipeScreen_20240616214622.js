@@ -32,24 +32,20 @@ const RecipeScreen = ({ navigation, route }) => {
   const debouncedValue = useDebounce(searchValue, 300);
 
   useEffect(() => {
-    if (debouncedValue.trim()) {
-      const fetchAPI = async () => {
-        try {
-          setIsLoading(true);
-          const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
-          setRecipes(searchResponse.data);
-          setHasMore(false); 
-        } catch (error) {
-          console.error('Error fetching search data:', error);
-        } finally {
-          setIsLoading(false);
-          setRefreshing(false);
-        }
-      };
-      fetchAPI();
-    } else {
-      fetchRecipes(1, true);
+    if (!debouncedValue.trim()) {
+      setRecipes([]);
+      return;
     }
+
+    const fetchAPI = async () => {
+      try {
+        const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
+        setRecipes(searchResponse.data)
+      } catch (error) {
+        console.error('Error fetching search data:', error);
+      }
+    };
+    fetchAPI();
   }, [debouncedValue]);
 
   useEffect(() => {
@@ -82,7 +78,6 @@ const RecipeScreen = ({ navigation, route }) => {
     setPage(1);
     setRecipes([]);
     setHasMore(true);
-    fetchRecipes(1, true);
   };
 
   const handleLoadMore = () => {

@@ -87,7 +87,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
       }));
 
       setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
-
       if (recipes.length < pageSize) {
         setHasMore(false);
       }
@@ -105,7 +104,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
     setPage(1);
     setMenuList([]);
     setHasMore(true);
-    
   };
 
   const handleLoadMore = () => {

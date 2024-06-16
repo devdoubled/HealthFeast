@@ -86,12 +86,11 @@ const SearchMenuScreen = ({ navigation, route }) => {
         unit: 'g',
       }));
 
-      setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
-
       if (recipes.length < pageSize) {
         setHasMore(false);
       }
 
+      setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -105,7 +104,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
     setPage(1);
     setMenuList([]);
     setHasMore(true);
-    
   };
 
   const handleLoadMore = () => {

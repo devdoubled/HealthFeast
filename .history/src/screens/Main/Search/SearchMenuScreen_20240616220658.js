@@ -50,7 +50,7 @@ const SearchMenuScreen = ({ navigation, route }) => {
             weight: recipe.weightInGram,
             unit: 'g',
           }));
-          setMenuList(transformedRecipes);
+          menuList(transformedRecipes);
           setHasMore(false);
         } catch (error) {
           console.error('Error fetching search data:', error);
@@ -73,7 +73,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
     if (!hasMore && !reset) return;
 
     try {
-      setIsLoading(true);
       const response = await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
       const recipes = response.data.items;
 
@@ -86,12 +85,11 @@ const SearchMenuScreen = ({ navigation, route }) => {
         unit: 'g',
       }));
 
-      setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
-
       if (recipes.length < pageSize) {
         setHasMore(false);
       }
 
+      setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -105,7 +103,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
     setPage(1);
     setMenuList([]);
     setHasMore(true);
-    
   };
 
   const handleLoadMore = () => {

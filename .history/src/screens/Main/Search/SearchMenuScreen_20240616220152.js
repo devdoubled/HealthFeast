@@ -18,7 +18,6 @@ import ModalAddMealSuccess from "../../../components/Main/Home/Meal/ModalAddMeal
 import ModalAddMeal from "../../../components/Main/Search/ModalAddMeal";
 import NavbarList from "../../../components/Main/Search/NavbarList";
 import { AuthContext } from "../../../context/AuthContext";
-import useDebounce from "../../../hooks/useDebounce";
 import apiClient from "../../../services/apiService";
 
 const SearchMenuScreen = ({ navigation, route }) => {
@@ -33,47 +32,17 @@ const SearchMenuScreen = ({ navigation, route }) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  const pageSize = 5;
-  const debouncedValue = useDebounce(searchValue, 300);
 
-  useEffect(() => {
-    if (debouncedValue.trim()) {
-      const fetchAPI = async () => {
-        try {
-          setIsLoading(true);
-          const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
-          const transformedRecipes = searchResponse.data.map(recipe => ({
-            id: recipe.recipeId,
-            name: recipe.recipeName,
-            image: recipe.images.length > 0 ? recipe.images[0].imagePath : null,
-            totalCalories: recipe.totalCalories,
-            weight: recipe.weightInGram,
-            unit: 'g',
-          }));
-          setMenuList(transformedRecipes);
-          setHasMore(false);
-        } catch (error) {
-          console.error('Error fetching search data:', error);
-        } finally {
-          setIsLoading(false);
-          setRefreshing(false);
-        }
-      };
-      fetchAPI();
-    } else {
-      fetchRecipes(1, true);
-    }
-  }, [debouncedValue]);
+  const pageSize = 5;
 
   useEffect(() => {
     fetchRecipes(page);
   }, [page]);
 
-  const fetchRecipes = async (page, reset = false) => {
-    if (!hasMore && !reset) return;
+  const fetchRecipes = async (page) => {
+    if (!hasMore) return;
 
     try {
-      setIsLoading(true);
       const response = await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
       const recipes = response.data.items;
 
@@ -86,12 +55,11 @@ const SearchMenuScreen = ({ navigation, route }) => {
         unit: 'g',
       }));
 
-      setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
-
       if (recipes.length < pageSize) {
         setHasMore(false);
       }
 
+      setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -105,7 +73,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
     setPage(1);
     setMenuList([]);
     setHasMore(true);
-    
   };
 
   const handleLoadMore = () => {
@@ -161,12 +128,8 @@ const SearchMenuScreen = ({ navigation, route }) => {
         </View>
       </View>
       <View style={styles.search_menu}>
-        <TextInput 
-          style={styles.input_menu} 
-          placeholder="Tìm kiếm" 
-          keyboardType="default"
-          onChangeText={(search) => handleChangeSearchInput(search)} 
-        />
+        <TextInput style={styles.input_menu} placeholder="Tìm kiếm" keyboardType="default"
+          onChangeText={(search) => handleChangeSearchInput(search)} />
       </View>
       {isLoading ? (
         <View style={styles.loadingContainer}>
