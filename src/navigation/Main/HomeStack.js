@@ -9,6 +9,8 @@ import ExerciseDetailScreen from "../../screens/Main/Home/ExerciseDetailScreen";
 import ExerciseScreen from "../../screens/Main/Home/ExerciseScreen";
 import HomeScreen from "../../screens/Main/Home/HomeScreen";
 import MealResultDetailScreen from "../../screens/Main/Home/MealResultDetailScreen";
+import PremiumScreen from "../../screens/Main/Setting/PremiumScreen";
+import PaymentScreen from "../../screens/Main/Setting/PaymentScreen";
 const Stack = createNativeStackNavigator();
 const HomeStack = () => {
   return (
@@ -109,6 +111,38 @@ const HomeStack = () => {
         })}
       >
         {(props) => <ExerciseDetailScreen {...props} />}
+      </Stack.Screen>
+      <Stack.Screen
+        name="PremiumScreen"
+        options={({ navigation }) => ({
+          title: "Đăng kí Premium",
+          headerTitleAlign: "center",
+          headerTintColor: "#000",
+          headerShadowVisible: false,
+          headerTitleStyle: {
+            fontFamily: "Montserrat-Medium",
+            fontSize: 24,
+          },
+          headerBackTitleVisible: false,
+        })}
+      >
+        {(props) => <PremiumScreen {...props} />}
+      </Stack.Screen>
+      <Stack.Screen
+        name="PaymentScreen"
+        options={({ navigation }) => ({
+          title: "Thanh toán",
+          headerTitleAlign: "center",
+          headerTintColor: "#000",
+          headerShadowVisible: false,
+          headerTitleStyle: {
+            fontFamily: "Montserrat-Medium",
+            fontSize: 24,
+          },
+          headerBackTitleVisible: false,
+        })}
+      >
+        {(props) => <PaymentScreen {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

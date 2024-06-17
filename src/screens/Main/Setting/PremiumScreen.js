@@ -3,24 +3,30 @@ import React, { useState } from 'react';
 import { Dimensions, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Logo from "../../../assets/images/main-logo.png";
 import premiumPackages from "../../../data/premiumPackages";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PremiumScreen = ({ navigation }) => {
   const width = Dimensions.get("window").width;
   const [selectedPackage, setSelectedPackage] = useState(1);
+  const [packageItem, setPackageItem] = useState({
+    id: 1,
+        package_title: `Gói "Ăn Uống Vui Vẻ"`,
+        package_price: 0,
+        package_features: [
+            "Gợi ý thực Đơn", "Scan calo món ăn", "Bản tin blog"
+        ]
+  })
 
-  const handleSelectPackage = (packageId) => {
-    setSelectedPackage(packageId)
+  const handleSelectPackage = (pack) => {
+    setSelectedPackage(pack.id)
+    setPackageItem(pack)
   }
 
   const hanlePressContinue = async () => {
-    // navigation.navigate("PaymentScreen")
-    
-
+    navigation.navigate("PaymentScreen", { pack: packageItem })
   }
 
   return (
-    <ScrollView style={styles.container} 
+    <ScrollView style={styles.container}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}>
       <View style={styles.logo}>
@@ -49,7 +55,7 @@ const PremiumScreen = ({ navigation }) => {
       </View>
       <View style={[styles.premium_container, { width: width - 32 }]}>
         {premiumPackages.map((item) => (
-          <Pressable style={styles.package_item} key={item.id} onPress={() => handleSelectPackage(item.id)}>
+          <Pressable style={styles.package_item} key={item.id} onPress={() => handleSelectPackage(item)}>
             <View style={styles.package_header}>
               <Text style={styles.package_title}>{item.package_title}</Text>
               <View style={styles.package_select}>

@@ -1,11 +1,10 @@
 // services/apiService.js
 
-import { API_BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: "https://khang.systems/api",
     headers: {
         'Content-Type': 'application/json',
     },

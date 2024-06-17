@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -14,10 +14,10 @@ import PurposeImg from "../../../assets/images/activity_less.png";
 import UserAvt from "../../../assets/images/user_default.png";
 import { AuthContext } from "../../../context/AuthContext";
 import settingOptions from "../../../data/settingOptions";
-import * as Updates from 'expo-updates';
+import ModalLogout from "../../../components/Main/Setting/ModalLogout";
 
 const SettingScreen = ({ navigation }) => {
-  const { logout } = useContext(AuthContext);
+  const [modalVisible, setModalVisile] = useState(false)
 
   const width = Dimensions.get("window").width;
 
@@ -38,11 +38,15 @@ const SettingScreen = ({ navigation }) => {
     if (screen) {
       navigation.navigate(screen);
     } else {
-      await logout();
-      await Updates.reloadAsync();
-
+      setModalVisile(true)
     }
   };
+
+  const handleCloseModal = () => {
+    setModalVisile(false)
+  }
+
+  
   return (
     <ScrollView
       style={styles.container}
@@ -95,6 +99,7 @@ const SettingScreen = ({ navigation }) => {
           </Pressable>
         ))}
       </View>
+      <ModalLogout visible={modalVisible} handleCloseModal={handleCloseModal} />
     </ScrollView>
   );
 };

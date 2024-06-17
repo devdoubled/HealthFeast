@@ -1,10 +1,10 @@
 import { AntDesign } from '@expo/vector-icons';
 import React, { useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-const ModalEditBMI = ({ visible, handleCloseModal }) => {
+const ModalEditBMI = ({ user, visible, handleCloseModal }) => {
   const [nav, setNav] = useState("Chiều cao");
-  const [height, setHeight] = useState(170)
-  const [weight, setWeight] = useState(70)
+  const [height, setHeight] = useState(user.height)
+  const [weight, setWeight] = useState(user.weight)
 
   const handlePlusHeight = () => {
     setHeight(prev => prev + 1)

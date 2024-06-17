@@ -3,17 +3,26 @@
     "name": "HealthFeast",
     "slug": "HealthFeast",
     "version": "1.0.0",
+    "scheme": "com.devdd.healthfeast",
     "orientation": "portrait",
-    "icon": "./src/assets/images/logo.png",
+    "icon": "./src/assets/images/sub_logo.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/sub_logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.devdd.healthfeast",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {},
     "plugins": [
@@ -24,7 +33,11 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
         }
       ]
-      
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5f4c84b6-ae9a-446e-8c44-6886ef20fd1e"
+      }
+    }
   }
 }

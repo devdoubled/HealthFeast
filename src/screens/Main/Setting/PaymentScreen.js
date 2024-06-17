@@ -1,11 +1,17 @@
 import { AntDesign } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import * as Linking from 'expo-linking';
+import React, { useContext, useState } from 'react';
 import { Dimensions, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import CreditLogo from "../../../assets/images/credit_logo.png";
 import Logo from "../../../assets/images/main-logo.png";
+import MBLogo from "../../../assets/images/mb_bank_logo.png";
 import MomoLogo from "../../../assets/images/momo_logo.png";
-import QrCode from "../../../assets/images/qr_code.png";
-const PaymentScreen = () => {
+import QrCodeCredit from "../../../assets/images/qr_code_credit.png";
+import QrCodeMomo from "../../../assets/images/qr_code_momo.png";
+import { AuthContext } from '../../../context/AuthContext';
+const PaymentScreen = ({ route }) => {
+    const { user } = useContext(AuthContext);
+    const { pack } = route.params
     const width = Dimensions.get("window").width;
     const item = {
         id: 1,
@@ -18,22 +24,41 @@ const PaymentScreen = () => {
     const [showPaymentOption, setShowPaymentOption] = useState(true)
     const [showMomoPayment, setShowMomoPayment] = useState(false)
     const [showCreditPayment, setShowCreditPayment] = useState(false)
+    const [selectedMethod, setSelectedMethod] = useState(2)
 
-    const handlePressMomo = () => {
+    const redirectUri = Linking.createURL("/");
+
+    const handlePressMomo = (id) => {
         setShowPaymentOption(!showPaymentOption);
         setShowMomoPayment(true);
+        setSelectedMethod(id)
     }
 
-    const handlePressCredit = () => {
+    const handlePressCredit = (id) => {
         setShowPaymentOption(!showPaymentOption);
         setShowCreditPayment(true);
+        setSelectedMethod(id)
     }
 
     const handleShowPayment = () => {
         setShowPaymentOption(!showPaymentOption)
         setShowCreditPayment(false);
         setShowMomoPayment(false);
+    }
 
+    const handlePressPay = () => {
+        if (selectedMethod === 2) {
+            const paymentData = {
+                accountId: user.accountId,
+                packageTypeId: pack.id,
+                amount: pack.package_price,
+                redirectUri: redirectUri,
+                description: "Thanh toan HealthFeast"
+            }
+
+            console.log(paymentData)
+            
+        }
     }
 
     return (
@@ -54,19 +79,19 @@ const PaymentScreen = () => {
                 </View>
                 <View style={styles.package_item}>
                     <View style={styles.package_header}>
-                        <Text style={styles.package_title}>{item.package_title}</Text>
+                        <Text style={styles.package_title}>{pack.package_title}</Text>
                         <View style={styles.package_select}>
                             <AntDesign name="checkcircle" size={20} color="#9ABF5A" />
                         </View>
                     </View>
                     <View style={styles.package_price}>
-                        <Text style={styles.price}>{item.package_price}</Text>
+                        <Text style={styles.price}>{pack.package_price}</Text>
                         <Text style={styles.unit}>đ/Tháng</Text>
                     </View>
                     <View style={styles.package_feature}>
                         <Text style={styles.feature_text}>Tính năng:</Text>
                         <View style={styles.feature_content}>
-                            {item.package_features.map((feature, index) => (
+                            {pack.package_features.map((feature, index) => (
                                 <View style={styles.feature_func} key={index}>
                                     <Text>{'\u2022'}</Text>
                                     <Text style={styles.feature_func_text}>{feature}</Text>
@@ -89,17 +114,31 @@ const PaymentScreen = () => {
                     </Pressable>
                     {showPaymentOption && (
                         <View style={styles.payment_info_content}>
-                            <Pressable style={styles.payment_option_momo} onPress={handlePressMomo}>
-                                <View style={styles.payment_option_img}>
-                                    <Image source={MomoLogo} style={styles.payment_option_momo_img} />
+                            <Pressable style={styles.payment_option_momo} onPress={() => handlePressMomo(1)}>
+                                <View style={styles.payment_option_momo_container}>
+                                    <View style={styles.payment_option_img}>
+                                        <Image source={MomoLogo} style={styles.payment_option_momo_img} />
+                                    </View>
+                                    <Text style={styles.payment_option_text}>Ví momo</Text>
                                 </View>
-                                <Text style={styles.payment_option_text}>Ví momo</Text>
+                                <View style={styles.package_select}>
+                                    {selectedMethod === 1 && (
+                                        <AntDesign name="checkcircle" size={20} color="#9ABF5A" />
+                                    )}
+                                </View>
                             </Pressable>
-                            <Pressable style={styles.payment_option_credit} onPress={handlePressCredit}>
-                                <View style={styles.payment_option_img}>
-                                    <Image source={CreditLogo} style={styles.payment_option_credit_img} />
+                            <Pressable style={styles.payment_option_credit} onPress={() => handlePressCredit(2)}>
+                                <View style={styles.payment_option_credit_container}>
+                                    <View style={styles.payment_option_img}>
+                                        <Image source={CreditLogo} style={styles.payment_option_credit_img} />
+                                    </View>
+                                    <Text style={styles.payment_option_text}>Thẻ tín dụng</Text>
                                 </View>
-                                <Text style={styles.payment_option_text}>Thẻ tín dụng hoặc thẻ ghi nợ</Text>
+                                <View style={styles.package_select}>
+                                    {selectedMethod === 2 && (
+                                        <AntDesign name="checkcircle" size={20} color="#9ABF5A" />
+                                    )}
+                                </View>
                             </Pressable>
                         </View>
                     )}
@@ -112,13 +151,13 @@ const PaymentScreen = () => {
                                 </View>
                                 <View style={styles.payment_user_detail}>
                                     <Text style={styles.detail_text}>SĐT</Text>
-                                    <Text style={styles.detail_number_text}>0837123099</Text>
+                                    <Text style={styles.detail_number_text}>0762879145</Text>
                                     <Text style={styles.detail_text}>Tên người nhận</Text>
-                                    <Text style={styles.detail_user_text}>Nguyen Tran Bang Bang</Text>
+                                    <Text style={styles.detail_user_text}>Nguyễn Trần Bâng Bâng</Text>
                                 </View>
                             </View>
                             <View style={styles.payment_qr_code}>
-                                <Image source={QrCode} style={styles.qr_code_img} />
+                                <Image source={QrCodeMomo} style={styles.qr_code_img} />
                             </View>
                         </View>
                     )}
@@ -127,21 +166,25 @@ const PaymentScreen = () => {
                             <View style={styles.payment_detail}>
                                 <View style={styles.payment_detail_title}>
                                     <Text style={styles.payment_detail_text}>Thẻ tín dụng</Text>
-                                    <Image source={CreditLogo} style={styles.payment_detail_credit_img} />
+                                    <Image source={MBLogo} style={styles.payment_detail_credit_img} />
                                 </View>
                                 <View style={styles.payment_user_detail}>
                                     <Text style={styles.detail_text}>STK</Text>
-                                    <Text style={styles.detail_number_text}>108886667868</Text>
+                                    <Text style={styles.detail_number_text}>0921089491</Text>
                                     <Text style={styles.detail_text}>Tên người nhận</Text>
-                                    <Text style={styles.detail_user_text}>Nguyen Tran Bang Bang</Text>
+                                    <Text style={styles.detail_user_text}>Nguyên Hùng Nghĩa</Text>
                                 </View>
                             </View>
                             <View style={styles.payment_qr_code}>
-                                <Image source={QrCode} style={styles.qr_code_img} />
+                                <Image source={QrCodeCredit} style={styles.qr_code_img} />
                             </View>
                         </View>
                     )}
+
                 </View>
+                <Pressable style={({ pressed }) => [styles.payment_btn, pressed && styles.pressed]} onPress={handlePressPay}>
+                    <Text style={styles.payment_btn_text}>Thanh toán</Text>
+                </Pressable>
             </View>
         </ScrollView>
     )
@@ -305,9 +348,14 @@ const styles = StyleSheet.create({
     payment_option_momo: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between",
         paddingBottom: 10,
         borderBottomWidth: 1,
         borderBottomColor: "#B4B4B4"
+    },
+    payment_option_momo_container: {
+        flexDirection: "row",
+        alignItems: "center",
     },
     payment_option_img: {
         width: 60,
@@ -325,7 +373,12 @@ const styles = StyleSheet.create({
     payment_option_credit: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between",
         paddingTop: 10
+    },
+    payment_option_credit_container: {
+        flexDirection: "row",
+        alignItems: "center",
     },
     payment_option_credit_img: {
         width: 50,
@@ -402,4 +455,21 @@ const styles = StyleSheet.create({
         width: 160,
         height: 160,
     },
+    payment_btn: {
+        width: "100%",
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#9ABF5A",
+        borderRadius: 12,
+        marginBottom: 15,
+    },
+    payment_btn_text: {
+        fontFamily: "Montserrat-Medium",
+        fontSize: 18,
+        color: "#FFFFFF",
+    },
+    pressed: {
+        opacity: 0.7
+    }
 })

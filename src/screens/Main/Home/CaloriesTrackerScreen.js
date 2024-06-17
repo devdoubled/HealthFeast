@@ -19,7 +19,7 @@ import RecipeIconText from "../../../assets/images/recipe_small.png";
 import CaloriesProgress from "../../../components/Main/Home/CaloriesTracker/CaloriesProgress";
 import MealBar from "../../../components/Main/Home/CaloriesTracker/MealBar";
 import apiClient from "../../../services/apiService";
-const CaloriesTrackerScreen = ({ route }) => {
+const CaloriesTrackerScreen = ({ route, navigation }) => {
   const width = Dimensions.get("window").width;
   const { userStatistic, date } = route.params;
   const parsedDate = new Date(date);
@@ -145,6 +145,10 @@ const CaloriesTrackerScreen = ({ route }) => {
   const roundToDecimal = (value) => {
     return Math.round(value);
   };
+
+  const handlePressGoToPremium = () => {
+    navigation.navigate("PremiumScreen")
+  }
 
   return (
     <ScrollView
@@ -278,6 +282,7 @@ const CaloriesTrackerScreen = ({ route }) => {
             styles.go_premium,
             pressed && styles.go_premium_pressed,
           ]}
+          onPress={handlePressGoToPremium}
         >
           <Text style={styles.go_premium_text}>Đi đến Premium</Text>
         </Pressable>

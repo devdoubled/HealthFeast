@@ -27,7 +27,7 @@ const RecipeScreen = ({ navigation, route }) => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  const pageSize = 6;
+  const pageSize = 10;
 
   const debouncedValue = useDebounce(searchValue, 300);
 
@@ -53,7 +53,7 @@ const RecipeScreen = ({ navigation, route }) => {
   }, [debouncedValue]);
 
   useEffect(() => {
-    fetchRecipes(page);
+      fetchRecipes(page);
   }, [page]);
 
   const fetchRecipes = async (page, reset = false) => {
@@ -82,7 +82,6 @@ const RecipeScreen = ({ navigation, route }) => {
     setPage(1);
     setRecipes([]);
     setHasMore(true);
-    fetchRecipes(1, true);
   };
 
   const handleLoadMore = () => {

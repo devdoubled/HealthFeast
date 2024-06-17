@@ -66,7 +66,7 @@ const SearchMenuScreen = ({ navigation, route }) => {
   }, [debouncedValue]);
 
   useEffect(() => {
-    fetchRecipes(page);
+      fetchRecipes(page);
   }, [page]);
 
   const fetchRecipes = async (page, reset = false) => {
@@ -105,7 +105,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
     setPage(1);
     setMenuList([]);
     setHasMore(true);
-    
   };
 
   const handleLoadMore = () => {

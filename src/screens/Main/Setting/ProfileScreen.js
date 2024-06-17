@@ -65,7 +65,7 @@ const ProfileScreen = () => {
           <Text style={styles.user_name_info}>Indochina Time (Hanoi)</Text>
         </View>
       </View>
-      <ModalEditBMI visible={modalVisible} handleCloseModal={handleCloseModal}/>
+      <ModalEditBMI user={user} visible={modalVisible} handleCloseModal={handleCloseModal}/>
     </View>
   );
 };
