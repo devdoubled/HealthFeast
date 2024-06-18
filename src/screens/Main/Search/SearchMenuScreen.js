@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -18,7 +18,6 @@ import ModalAddMealSuccess from "../../../components/Main/Home/Meal/ModalAddMeal
 import ModalAddMeal from "../../../components/Main/Search/ModalAddMeal";
 import NavbarList from "../../../components/Main/Search/NavbarList";
 import { AuthContext } from "../../../context/AuthContext";
-import useDebounce from "../../../hooks/useDebounce";
 import apiClient from "../../../services/apiService";
 
 const SearchMenuScreen = ({ navigation, route }) => {
@@ -27,55 +26,21 @@ const SearchMenuScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisibleSuccess, setModalVisibleSuccess] = useState(false);
   const [menuList, setMenuList] = useState([])
+  const [fullMenuList, setFullMenuList] = useState([]);
   const [menuItem, setMenuItem] = useState({})
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
-  const pageSize = 5;
-  const debouncedValue = useDebounce(searchValue, 300);
+  const searchInputRef = useRef(null);
+
 
   useEffect(() => {
-    if (debouncedValue.trim()) {
-      const fetchAPI = async () => {
-        try {
-          setIsLoading(true);
-          const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
-          const transformedRecipes = searchResponse.data.map(recipe => ({
-            id: recipe.recipeId,
-            name: recipe.recipeName,
-            image: recipe.images.length > 0 ? recipe.images[0].imagePath : null,
-            totalCalories: recipe.totalCalories,
-            weight: recipe.weightInGram,
-            unit: 'g',
-          }));
-          setMenuList(transformedRecipes);
-          setHasMore(false);
-        } catch (error) {
-          console.error('Error fetching search data:', error);
-        } finally {
-          setIsLoading(false);
-          setRefreshing(false);
-        }
-      };
-      fetchAPI();
-    } else {
-      fetchRecipes(1, true);
-    }
-  }, [debouncedValue]);
+    fetchRecipes();
+  }, []);
 
-  useEffect(() => {
-      fetchRecipes(page);
-  }, [page]);
-
-  const fetchRecipes = async (page, reset = false) => {
-    if (!hasMore && !reset) return;
-
+  const fetchRecipes = async () => {
     try {
-      setIsLoading(true);
-      const response = await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
-      const recipes = response.data.items;
+      const response = await apiClient.get(`/Recipes`);
+      const recipes = response.data;
 
       const transformedRecipes = recipes.map(recipe => ({
         id: recipe.recipeId,
@@ -85,13 +50,8 @@ const SearchMenuScreen = ({ navigation, route }) => {
         weight: recipe.weightInGram,
         unit: 'g',
       }));
-
-      setMenuList((prevMenuList) => [...prevMenuList, ...transformedRecipes]);
-
-      if (recipes.length < pageSize) {
-        setHasMore(false);
-      }
-
+      setMenuList(transformedRecipes);
+      setFullMenuList(transformedRecipes);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -102,14 +62,11 @@ const SearchMenuScreen = ({ navigation, route }) => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    setPage(1);
     setMenuList([]);
-    setHasMore(true);
-  };
-
-  const handleLoadMore = () => {
-    if (!isLoading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
+    setFullMenuList([]);
+    fetchRecipes();
+    if (searchInputRef.current) {
+      searchInputRef.current.clear();
     }
   };
 
@@ -129,7 +86,7 @@ const SearchMenuScreen = ({ navigation, route }) => {
       name: item.name
     };
     try {
-      const res = await apiClient.post("/FavoriteRecipes/recipe", mealFavorite)
+      await apiClient.post("/FavoriteRecipes/recipe", mealFavorite)
       setModalVisible(false);
       setModalVisibleSuccess(true)
     } catch (error) {
@@ -138,14 +95,15 @@ const SearchMenuScreen = ({ navigation, route }) => {
   };
 
   const handleChangeSearchInput = (search) => {
-    if (!search.startsWith(" ")) {
-      setSearchValue(search);
+    if (search.trim() === '') {
+      setMenuList(fullMenuList);
+    } else {
+      const filteredMenu = fullMenuList.filter(item =>
+        item.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(search.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
+      );
+      setMenuList(filteredMenu);
     }
   }
-
-  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-    return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
-  };
 
   return (
     <View style={styles.container}>
@@ -160,11 +118,12 @@ const SearchMenuScreen = ({ navigation, route }) => {
         </View>
       </View>
       <View style={styles.search_menu}>
-        <TextInput 
-          style={styles.input_menu} 
-          placeholder="Tìm kiếm" 
+        <TextInput
+          style={styles.input_menu}
+          placeholder="Tìm kiếm"
           keyboardType="default"
-          onChangeText={(search) => handleChangeSearchInput(search)} 
+          onChangeText={(search) => handleChangeSearchInput(search)}
+          ref={searchInputRef}
         />
       </View>
       {isLoading ? (
@@ -176,11 +135,6 @@ const SearchMenuScreen = ({ navigation, route }) => {
           style={styles.search_menu_list}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          onScroll={({ nativeEvent }) => {
-            if (isCloseToBottom(nativeEvent)) {
-              handleLoadMore();
-            }
-          }}
           scrollEventThrottle={400}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#9ABF5A"]}
             tintColor={"#9ABF5A"} />}

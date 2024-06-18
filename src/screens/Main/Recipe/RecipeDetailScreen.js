@@ -99,8 +99,8 @@ const RecipeDetailScreen = ({ route }) => {
           </View>
           <Text style={styles.recipe_component}>Thành phần:</Text>
           <View style={styles.recipe_component_container}>
-            {recipeItem.ingredients.map((component) => (
-              <ComponentItem component={component} key={component.ingredientId} />
+            {recipeItem.ingredients.map((component, index) => (
+              <ComponentItem component={component} key={index} />
             ))}
           </View>
         </ScrollView>

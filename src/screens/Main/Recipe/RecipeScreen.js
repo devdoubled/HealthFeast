@@ -1,7 +1,7 @@
 import {
   Ionicons
 } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -17,58 +17,25 @@ import {
 import RecipeIconText from "../../../assets/images/activity_very.png";
 import NavbarList from "../../../components/Main/Recipe/NavbarList";
 import RecipeItem from "../../../components/Main/Recipe/RecipeItem";
-import useDebounce from "../../../hooks/useDebounce";
 import apiClient from './../../../services/apiService';
 const RecipeScreen = ({ navigation, route }) => {
   const width = Dimensions.get("window").width;
   const [recipes, setRecipes] = useState([])
+  const [fullRecipes, setFullRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
-  const pageSize = 10;
-
-  const debouncedValue = useDebounce(searchValue, 300);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
-    if (debouncedValue.trim()) {
-      const fetchAPI = async () => {
-        try {
-          setIsLoading(true);
-          const searchResponse = await apiClient.get(`/Recipes/name?name=${debouncedValue}`);
-          setRecipes(searchResponse.data);
-          setHasMore(false); 
-        } catch (error) {
-          console.error('Error fetching search data:', error);
-        } finally {
-          setIsLoading(false);
-          setRefreshing(false);
-        }
-      };
-      fetchAPI();
-    } else {
-      fetchRecipes(1, true);
-    }
-  }, [debouncedValue]);
+    fetchRecipes();
+  }, []);
 
-  useEffect(() => {
-      fetchRecipes(page);
-  }, [page]);
-
-  const fetchRecipes = async (page, reset = false) => {
-    if (!hasMore && !reset) return;
-
+  const fetchRecipes = async () => {
     try {
-      setIsLoading(true);
-      const response = await apiClient.get(`/Recipes?page=${page}&size=${pageSize}`);
-      const newRecipes = response.data.items;
-
-      if (newRecipes.length < pageSize) {
-        setHasMore(false);
-      }
-
-      setRecipes((prevRecipes) => reset ? newRecipes : [...prevRecipes, ...newRecipes]);
+      const response = await apiClient.get(`/Recipes`);
+      const newRecipes = response.data;
+      setRecipes(newRecipes);
+      setFullRecipes(newRecipes);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
@@ -79,20 +46,22 @@ const RecipeScreen = ({ navigation, route }) => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    setPage(1);
     setRecipes([]);
-    setHasMore(true);
-  };
-
-  const handleLoadMore = () => {
-    if (!isLoading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
+    setFullRecipes([]);
+    fetchRecipes();
+    if (searchInputRef.current) {
+      searchInputRef.current.clear();
     }
   };
 
   const handleChangeSearchInput = (search) => {
-    if (!search.startsWith(" ")) {
-      setSearchValue(search);
+    if (search.trim() === '') {
+      setRecipes(fullRecipes);
+    } else {
+      const filteredRecipes = fullRecipes.filter(item =>
+        item.recipeName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(search.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
+      );
+      setRecipes(filteredRecipes);
     }
   }
 
@@ -113,6 +82,7 @@ const RecipeScreen = ({ navigation, route }) => {
           placeholderTextColor="#B4B4B4"
           keyboardType="default"
           onChangeText={(search) => handleChangeSearchInput(search)}
+          ref={searchInputRef}
         />
         <Ionicons name="search" size={28} color="#B4B4B4" />
       </View>
@@ -124,7 +94,7 @@ const RecipeScreen = ({ navigation, route }) => {
         <FlatList
           data={recipes}
           renderItem={({ item }) => <RecipeItem item={item} navigation={navigation} />}
-          keyExtractor={(item, index) => index.toString()} 
+          keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
           numColumns={2}
           contentContainerStyle={[styles.list_container, { width: width - 24 }]}
@@ -136,9 +106,6 @@ const RecipeScreen = ({ navigation, route }) => {
               tintColor={"#9ABF5A"}
             />
           }
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={hasMore ? <ActivityIndicator size="small" color="#9ABF5A" /> : null}
         />
       )}
     </View>

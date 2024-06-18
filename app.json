@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "HealthFeast",
-    "slug": "HealthFeast",
+    "slug": "healthfeast-mobile",
     "version": "1.0.0",
     "scheme": "com.devdd.healthfeast",
     "orientation": "portrait",
@@ -36,7 +36,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "5f4c84b6-ae9a-446e-8c44-6886ef20fd1e"
+        "projectId": "fa441770-aa12-4515-84a0-413f3fea6555"
       }
     }
   }

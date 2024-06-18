@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   Image,
@@ -12,12 +12,11 @@ import {
 } from "react-native";
 import PurposeImg from "../../../assets/images/activity_less.png";
 import UserAvt from "../../../assets/images/user_default.png";
-import { AuthContext } from "../../../context/AuthContext";
-import settingOptions from "../../../data/settingOptions";
 import ModalLogout from "../../../components/Main/Setting/ModalLogout";
+import settingOptions from "../../../data/settingOptions";
 
 const SettingScreen = ({ navigation }) => {
-  const [modalVisible, setModalVisile] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
 
   const width = Dimensions.get("window").width;
 
@@ -38,15 +37,14 @@ const SettingScreen = ({ navigation }) => {
     if (screen) {
       navigation.navigate(screen);
     } else {
-      setModalVisile(true)
+      setModalVisible(true)
     }
   };
 
   const handleCloseModal = () => {
-    setModalVisile(false)
+    setModalVisible(false)
   }
 
-  
   return (
     <ScrollView
       style={styles.container}

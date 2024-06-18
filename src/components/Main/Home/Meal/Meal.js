@@ -24,7 +24,7 @@ const Meal = ({ width, meal, mealData, handleAddMealPress }) => {
       <View style={styles.list_meal}>
         {mealItems.length > 0 && mealItems.map((mealItem) => (
           <View style={styles.meal_item} key={mealItem.mealId}>
-            <Image style={styles.meal_item_img} source={{ url: mealItem.image }} />
+            <Image style={styles.meal_item_img} source={{ uri: mealItem.image }} />
             <View style={styles.meal_item_content}>
               <Text style={styles.meal_item_name}>{mealItem.mealName}</Text>
               <Text style={styles.meal_item_calories}>{mealItem.calCalories} kCal</Text>

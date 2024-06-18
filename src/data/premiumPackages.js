@@ -1,12 +1,12 @@
 export default [
-    {
-        id: 1,
-        package_title: `Gói "Ăn Uống Vui Vẻ"`,
-        package_price: 0,
-        package_features: [
-            "Gợi ý thực Đơn", "Scan calo món ăn", "Bản tin blog"
-        ]
-    },
+    // {
+    //     id: 1,
+    //     package_title: `Gói "Ăn Uống Vui Vẻ"`,
+    //     package_price: 0,
+    //     package_features: [
+    //         "Gợi ý thực Đơn", "Scan calo món ăn", "Bản tin blog"
+    //     ]
+    // },
     {
         id: 2,
         package_title: `Gói "Phượt Thủ Dinh Dưỡng"`,

@@ -1,6 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
-import React, { useContext, useState } from 'react';
+import * as WebBrowser from "expo-web-browser";
+import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import CreditLogo from "../../../assets/images/credit_logo.png";
 import Logo from "../../../assets/images/main-logo.png";
@@ -8,25 +9,40 @@ import MBLogo from "../../../assets/images/mb_bank_logo.png";
 import MomoLogo from "../../../assets/images/momo_logo.png";
 import QrCodeCredit from "../../../assets/images/qr_code_credit.png";
 import QrCodeMomo from "../../../assets/images/qr_code_momo.png";
+import ModalPayment from '../../../components/Main/Setting/ModalPayment';
 import { AuthContext } from '../../../context/AuthContext';
-const PaymentScreen = ({ route }) => {
+import apiClient from './../../../services/apiService';
+const PaymentScreen = ({ route, navigation }) => {
     const { user } = useContext(AuthContext);
     const { pack } = route.params
     const width = Dimensions.get("window").width;
-    const item = {
-        id: 1,
-        package_title: `Gói "Ăn Uống Vui Vẻ"`,
-        package_price: 0,
-        package_features: [
-            "Gợi ý thực Đơn", "Scan calo món ăn", "Bản tin blog"
-        ]
-    }
     const [showPaymentOption, setShowPaymentOption] = useState(true)
     const [showMomoPayment, setShowMomoPayment] = useState(false)
     const [showCreditPayment, setShowCreditPayment] = useState(false)
     const [selectedMethod, setSelectedMethod] = useState(2)
+    const [modalVisible, setModalVisible] = useState(false)
+    const [paymentStatus, setPaymentStatus] = useState("")
 
     const redirectUri = Linking.createURL("/");
+
+    useEffect(() => {
+        const handleOpenURL = async (event) => {
+            const { path, queryParams } = Linking.parse(event.url);
+            if (queryParams?.status === "CANCEL") {
+                setPaymentStatus("cancel");
+                setModalVisible(true)
+            } else if (queryParams?.status === "SUCCESS") {
+                setPaymentStatus("success");
+                setModalVisible(true)
+            }
+        };
+
+        const eventEmitter = Linking.addEventListener("url", handleOpenURL);
+
+        return () => {
+            eventEmitter.remove();
+        };
+    }, []);
 
     const handlePressMomo = (id) => {
         setShowPaymentOption(!showPaymentOption);
@@ -46,19 +62,28 @@ const PaymentScreen = ({ route }) => {
         setShowMomoPayment(false);
     }
 
-    const handlePressPay = () => {
+    const handlePressPay = async () => {
         if (selectedMethod === 2) {
             const paymentData = {
                 accountId: user.accountId,
                 packageTypeId: pack.id,
                 amount: pack.package_price,
-                redirectUri: redirectUri,
-                description: "Thanh toan HealthFeast"
+                redirectUrl: redirectUri,
             }
-
-            console.log(paymentData)
-            
+            console.log(paymentData);
+            try {
+                const res = await apiClient.post("/Payment/create-payment-link", paymentData)
+                const url = res.data.checkoutUrl
+                WebBrowser.openBrowserAsync(url)
+            } catch (error) {
+                console.log("Error payment:", error);
+            }
         }
+    }
+
+    const handleCloseModal = () => {
+        setModalVisible(false)
+        navigation.pop(2);
     }
 
     return (
@@ -186,6 +211,7 @@ const PaymentScreen = ({ route }) => {
                     <Text style={styles.payment_btn_text}>Thanh toán</Text>
                 </Pressable>
             </View>
+            <ModalPayment visible={modalVisible} handleCloseModal={handleCloseModal} status={paymentStatus} />
         </ScrollView>
     )
 }
