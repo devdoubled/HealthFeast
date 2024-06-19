@@ -58,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchUserStatistic = async () => {
     try {
-      const statisticResponse = await apiClient.get(`/AccountStatistics/${user.accountId}`);
+      const statisticResponse = await apiClient.get(`/AccountStatistics/${user?.accountId}`);
       setUserStatistic(statisticResponse.data);
     } catch (error) {
       setUserStatistic(null);
@@ -112,7 +112,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchUserStatistic();
-  }, [user.accountId]);
+  }, [user?.accountId]);
 
   useEffect(() => {
     fetchExerciseData(value);
@@ -255,7 +255,7 @@ const HomeScreen = ({ navigation }) => {
           <Image source={EatenIcon} style={styles.eaten_img} />
           <Text style={styles.eaten_text}>Nạp vào</Text>
         </View>
-        <CircularProgress eaten={roundToDecimal(userStatistic.tdee) - (mealStatisticHistory?.totalCalories || 0) + exerciseHistory.totalCalBurned} target={roundToDecimal(userStatistic.tdee)} />
+        <CircularProgress eaten={mealStatisticHistory?.totalCalories || 0} target={roundToDecimal(userStatistic?.tdee) - (mealStatisticHistory?.totalCalories || 0) + exerciseHistory.totalCalBurned} />
         <View style={styles.burned}>
           <Image source={BurnedIcon} style={styles.burned_img} />
           <Text style={styles.burned_text}>Đốt cháy</Text>

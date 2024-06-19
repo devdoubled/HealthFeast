@@ -28,18 +28,17 @@ const WeightScreen = ({ onNext, askingData, setAskingData }) => {
           <TextInput
             value={askingData.weight}
             style={styles.input}
-            placeholder="kg"
             keyboardType="numeric"
-            placeholderTextColor="#FFFFFF"
             onChangeText={(value) => {
               const formattedValue = value.replace(',', '.');
               setAskingData({ ...askingData, weight: formattedValue });
             }}
+            selectionColor="#FFFFFF"
           />
         </View>
       </View>
       <View style={[styles.action_container, { width: width - 60 }]}>
-        <CustomButton text="Tiếp tục" onPress={handleNext} />
+        <CustomButton text="Tiếp tục" onPress={handleNext}/>
       </View>
     </View>
   );
@@ -85,12 +84,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#9ABF5A",
   },
   input: {
+    width: "100%",
     fontFamily: "Montserrat-Medium",
     fontSize: 36,
-    color: "#FFFFFF"
+    textAlign: "center",
+    color: "#FFFFFF",
   },
   action_container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 20,
   },
 });

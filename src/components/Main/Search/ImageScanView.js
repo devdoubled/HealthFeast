@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import {
   ImageBackground,
   Pressable,
@@ -7,13 +7,8 @@ import {
   Text,
   View,
 } from "react-native";
-import ModalAddMeal from "./ModalAddMeal";
 import NutritionProgress from "./NutritionProgress";
 const ImageScanView = ({ scanResult, image, goBackPrevScreen }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const handleCloseModal = () => {
-    setModalVisible(false)
-  }
   return (
     <ImageBackground
       source={{ uri: image }}
@@ -61,12 +56,11 @@ const ImageScanView = ({ scanResult, image, goBackPrevScreen }) => {
             styles.add_meal_btn,
             pressed && styles.pressed,
           ]}
-          onPress={() => setModalVisible(true)}
+          onPress={goBackPrevScreen}
         >
-          <Text style={styles.add_meal_text}>Thêm vào bữa ăn</Text>
+          <Text style={styles.add_meal_text}>Xác nhận thông tin món ăn</Text>
         </Pressable>
       </View>
-      <ModalAddMeal visible={modalVisible} handleCloseModal={handleCloseModal}/>
     </ImageBackground>
   );
 };

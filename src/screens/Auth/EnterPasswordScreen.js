@@ -13,8 +13,10 @@ import Loading from "../../components/Loading";
 import apiClient from "../../services/apiService";
 const EnterPasswordScreen = ({ navigation, route }) => {
   const { email, otp } = route.params
+  const passwordInputRef = useRef(null);
   const confirmPasswordInputRef = useRef(null);
   const [showImage, setShowImage] = useState(true);
+  const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -40,7 +42,8 @@ const EnterPasswordScreen = ({ navigation, route }) => {
     const newPasswordData = {
       email: email,
       otp: otp,
-      password: password
+      password: password,
+      name: userName
     }
     try {
       await apiClient.post("/Account/confirm/newaccount", newPasswordData);
@@ -82,6 +85,17 @@ const EnterPasswordScreen = ({ navigation, route }) => {
         </View>
         <View style={styles.line}></View>
         <TextInput
+          style={styles.input_username}
+          placeholder="Tên của bạn"
+          keyboardType="default"
+          spellCheck={false}
+          autoCapitalize={false}
+          onFocus={handleFocusInput}
+          onChangeText={setUserName}
+          onSubmitEditing={() => passwordInputRef.current.focus()}
+        />
+        <TextInput
+          ref={passwordInputRef}
           style={styles.input_password}
           placeholder="Nhập mật khẩu"
           keyboardType="default"
@@ -172,6 +186,15 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: "#B4B4B4",
+  },
+  input_username: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginTop: 15,
+    fontFamily: "Montserrat-Regular",
+    fontSize: 16,
+    borderRadius: 10,
+    backgroundColor: "#F3F2F1",
   },
   input_password: {
     paddingVertical: 12,

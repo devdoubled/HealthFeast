@@ -2,12 +2,12 @@ import React from "react";
 import {
   StyleSheet,
   Text,
+  TextInput,
   useWindowDimensions,
   View,
-  TextInput,
 } from "react-native";
-import CustomButton from "../../components/Auth/CustomButton";
 import AskingBgIcon from "../../components/Asking/AskingBgIcon";
+import CustomButton from "../../components/Auth/CustomButton";
 
 const HeightScreen = ({ onNext, askingData, setAskingData }) => {
   const { width } = useWindowDimensions();
@@ -18,9 +18,8 @@ const HeightScreen = ({ onNext, askingData, setAskingData }) => {
     <View style={styles.container}>
       <Text style={styles.heading_text}>Chiều cao của bạn?</Text>
       <Text style={styles.sub_text}>
-        Đo lường chiều cao đóng vai trò quan trọng trong việc xác định cân nặng
-        lý tưởng và cũng ảnh hưởng đến nhu cầu calo và chất dinh dưỡng của mỗi
-        người
+        Đo lường chiều cao đóng vai trò quan trọng trong việc xác định kế hoạch
+        lý tưởng và ảnh hưởng đến nhu cầu calo và chất dinh dưỡng
       </Text>
       <View style={[styles.height_container, { width: width - 60 }]}>
         <AskingBgIcon />
@@ -28,13 +27,12 @@ const HeightScreen = ({ onNext, askingData, setAskingData }) => {
           <TextInput
             value={askingData.height}
             style={styles.input}
-            placeholder="cm"
             keyboardType="numeric"
-            placeholderTextColor="#FFFFFF"
             onChangeText={(value) => {
               const formattedValue = value.replace(',', '.');
               setAskingData({ ...askingData, height: formattedValue });
             }}
+            selectionColor="#FFFFFF"
           />
         </View>
       </View>
@@ -86,12 +84,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#9ABF5A",
   },
   input: {
+    width: "100%",
     fontFamily: "Montserrat-Medium",
     fontSize: 36,
+    textAlign: "center",
     color: "#FFFFFF",
   },
   action_container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 20,
   },
 });

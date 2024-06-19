@@ -12,23 +12,21 @@ const AgeScreen = ({ onNext, askingData, setAskingData }) => {
     <View style={styles.container}>
       <Text style={styles.heading_text}>Bạn bao nhiêu tuổi?</Text>
       <Text style={styles.sub_text}>
-      Độ tuổi của bạn đóng vai trò quan trọng trong việc xác định nhu cầu dinh dưỡng và cân nặng lý tưởng. Tuy nhiên thông tin này sẽ vẫn
+        Độ tuổi của bạn đóng vai trò quan trọng trong việc xác định nhu cầu dinh dưỡng và cân nặng lý tưởng. Thông tin này sẽ vẫn
         ở chế độ riêng tư
       </Text>
       <View style={[styles.age_container, { width: width - 60 }]}>
-        <AskingBgIcon/>
+        <AskingBgIcon />
         <View style={styles.input_container}>
           <TextInput
             value={askingData.age}
             style={styles.input}
-            placeholder="tuổi"
             keyboardType="numeric"
-            placeholderTextColor="#FFFFFF"
             onChangeText={(value) => setAskingData({ ...askingData, age: value })}
-
+            selectionColor="#FFFFFF"
           />
         </View>
-      </View> 
+      </View>
       <View style={[styles.action_container, { width: width - 60 }]}>
         <CustomButton text="Tiếp tục" onPress={handleNext} />
       </View>
@@ -77,12 +75,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#9ABF5A",
   },
   input: {
+    width: "100%",
     fontFamily: "Montserrat-Medium",
     fontSize: 36,
-    color: "#FFFFFF"
+    textAlign: "center",
+    color: "#FFFFFF",
   },
   action_container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 20,
   },
 });

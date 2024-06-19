@@ -44,11 +44,11 @@ const AskingScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <Paginator data={askingOptions} scrollX={scrollX} />
-      <View style={{ flex: 3 }}>
+      <View style={styles.flatListContainer}>
         <FlatList
           data={askingOptions}
           renderItem={({ item }) => (
-            <AskingItem item={item} onNext={handleNextPress} askingData={askingData} setAskingData={setAskingData} navigation={navigation}/>
+            <AskingItem item={item} onNext={handleNextPress} askingData={askingData} setAskingData={setAskingData} navigation={navigation} />
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -77,5 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: 75,
     backgroundColor: "#ffffff",
+  },
+  flatListContainer: {
+    flex: 3,
   },
 });

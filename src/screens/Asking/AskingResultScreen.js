@@ -20,7 +20,7 @@ const AskingResultScreen = ({ navigation, route }) => {
   const bmrDescription = getBMRDescription(info.bmr);
   const tdeeDescription = getTDEEDescription(info.tdee);
 
-  const handlePressCreatePlan = () => {
+  const handlePressCreatePlan = async () => {
     navigation.navigate("MainStack");
   }
   return (
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     color: "#B4B4B4",
   },
   description: {
-    width: 200,
+    width: 220,
     fontFamily: "Montserrat-Medium",
     fontSize: 13,
     textAlign: "right",

@@ -16,16 +16,16 @@ const ModalPayment = ({ visible, handleCloseModal, status }) => {
                         <Image source={status === "success" ? SuccessImg : ErrorImg} style={styles.payment_img} />
                     </View>
                     <Text style={[styles.payment_title, { color: status === "success" ? "#9ABF5A" : "red"}]}>
-                        {status === "success" ? "Successful" : "Unsuccessful"}
+                        {status === "success" ? "Thanh toán thành công" : "Thanh toán thất bại"}
                     </Text>
                     <Text style={styles.payment_desc}>
-                        {status === "success" ? "Your payment was done successfully" : "Your payment was canceled"}
+                        {status === "success" ? "Thanh toán được thực hiện thành công" : "Thanh toán đã bị hủy"}
                     </Text>
                     <Pressable 
                         style={({ pressed }) => [styles.confirm_btn, pressed && styles.btn_pressed, { backgroundColor: status === "success" ? "#9ABF5A" : "red"}]} 
                         onPress={handleCloseModal}
                     >
-                        <Text style={styles.confirm_txt}>Ok</Text>
+                        <Text style={styles.confirm_txt}>Xác nhận</Text>
                     </Pressable>
                 </View>
             </Pressable>

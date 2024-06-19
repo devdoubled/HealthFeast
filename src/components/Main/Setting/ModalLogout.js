@@ -1,11 +1,8 @@
 import * as Updates from 'expo-updates';
-import React, { useContext } from 'react';
+import React from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { AuthContext } from '../../../context/AuthContext';
 
-const ModalLogout = ({ visible, handleCloseModal }) => {
-    const { logout } = useContext(AuthContext);
-
+const ModalLogout = ({ visible, handleCloseModal, logout }) => {
     const handleLogout = async () => {
         await logout();
         await Updates.reloadAsync();

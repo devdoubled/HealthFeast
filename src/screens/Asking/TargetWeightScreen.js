@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, useWindowDimensions, View } from "react-native";
 import AskingBgIcon from "../../components/Asking/AskingBgIcon";
 import CustomButton from "../../components/Auth/CustomButton";
 
 const TargetWeightScreen = ({ onNext }) => {
   const { width } = useWindowDimensions();
+  const [targetWeight, setTargetWeight] = useState(0);
   const handleNext = () => {
     onNext();
   };
@@ -20,14 +21,14 @@ const TargetWeightScreen = ({ onNext }) => {
         <View style={styles.input_container}>
           <TextInput
             style={styles.input}
-            placeholder="kg"
             keyboardType="numeric"
-            placeholderTextColor="#FFFFFF"
+            selectionColor="#FFFFFF"
+            onChangeText={(value) => setTargetWeight(value)}
           />
         </View>
       </View>
       <View style={[styles.action_container, { width: width - 60 }]}>
-        <CustomButton text="Tiếp tục" onPress={handleNext} />
+        <CustomButton text="Tiếp tục" onPress={handleNext}/>
       </View>
     </View>
   );
@@ -74,12 +75,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#9ABF5A",
   },
   input: {
+    width: "100%",
     fontFamily: "Montserrat-Medium",
     fontSize: 36,
-    color: "#FFFFFF"
+    textAlign: "center",
+    color: "#FFFFFF",
   },
   action_container: {
     position: "absolute",
-    bottom: 40,
+    bottom:  20,
   },
 });

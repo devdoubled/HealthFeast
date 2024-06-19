@@ -90,7 +90,7 @@ const ActivityScreen = ({ askingData, setAskingData, navigation }) => {
       const dataResult = response.data
       navigation.navigate("AskingResultScreen", { info: dataResult })
     } catch (error) {
-      console.log(error);
+      console.log("Error create account statistic:", error);
     } finally {
       setIsLoading(false)
     }
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   activity_picker_container: {
-    flex: "row",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 70,
@@ -207,6 +207,6 @@ const styles = StyleSheet.create({
   },
   action_container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 20,
   },
 });

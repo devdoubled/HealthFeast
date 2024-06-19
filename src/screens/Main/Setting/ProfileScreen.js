@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   Image,
@@ -11,11 +11,10 @@ import {
 } from "react-native";
 import UserAvt from "../../../assets/images/user_default.png";
 import ModalEditBMI from "../../../components/Main/Setting/ModalEditBMI";
-import { AuthContext } from "../../../context/AuthContext";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ route }) => {
   const width = Dimensions.get("window").width;
-  const { user } = useContext(AuthContext);
+  const { user } = route.params
   const [modalVisible, setModalVisible] = useState(false);
   const handleCloseModal = () => {
     setModalVisible(false)
@@ -24,7 +23,7 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <View style={[styles.avatar_container, { width: width - 32 }]}>
         <View style={styles.avatar_main}>
-          <Image source={UserAvt} style={styles.avatar} />
+          <Image source={{ uri: user?.avatar || "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436178.jpg?size=338&ext=jpg&ga=GA1.1.1141335507.1718755200&semt=ais_user" }} style={styles.avatar} />
           <Pressable
             style={({ pressed }) => [
               styles.edit_avt,
@@ -38,7 +37,7 @@ const ProfileScreen = () => {
       <View style={[styles.profile_info, { width: width - 32 }]}>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Tên người dùng</Text>
-          <Text style={styles.user_name_info}>DevDoubleD</Text>
+          <Text style={styles.user_name_info}>{user?.name || ""}</Text>
         </View>
         <Pressable style={({ pressed }) => [styles.user_info, pressed && styles.pressed]} onPress={() => setModalVisible(true)}>
           <Text style={styles.user_name_title}>Cập nhật BMI</Text>
@@ -50,7 +49,7 @@ const ProfileScreen = () => {
         </View>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Giới tính</Text>
-          <Text style={styles.user_name_info}>Name</Text>
+          <Text style={styles.user_name_info}>Nam</Text>
         </View>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Email</Text>
@@ -65,7 +64,7 @@ const ProfileScreen = () => {
           <Text style={styles.user_name_info}>Indochina Time (Hanoi)</Text>
         </View>
       </View>
-      <ModalEditBMI user={user} visible={modalVisible} handleCloseModal={handleCloseModal}/>
+      <ModalEditBMI user={user} visible={modalVisible} handleCloseModal={handleCloseModal} />
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -13,9 +13,11 @@ import {
 import PurposeImg from "../../../assets/images/activity_less.png";
 import UserAvt from "../../../assets/images/user_default.png";
 import ModalLogout from "../../../components/Main/Setting/ModalLogout";
+import { AuthContext } from "../../../context/AuthContext";
 import settingOptions from "../../../data/settingOptions";
 
 const SettingScreen = ({ navigation }) => {
+  const { user, logout } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false)
 
   const width = Dimensions.get("window").width;
@@ -35,7 +37,7 @@ const SettingScreen = ({ navigation }) => {
     const screen = screenMapping[title];
 
     if (screen) {
-      navigation.navigate(screen);
+      navigation.navigate(screen, { user: user });
     } else {
       setModalVisible(true)
     }
@@ -58,8 +60,8 @@ const SettingScreen = ({ navigation }) => {
           <Text style={styles.streak_desc}>Ngày</Text>
         </View>
         <View style={styles.user}>
-          <Image source={UserAvt} style={styles.user_avt} />
-          <Text style={styles.user_name}>Dev DoubleD</Text>
+          <Image source={{ uri: user?.avatar || "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436178.jpg?size=338&ext=jpg&ga=GA1.1.1141335507.1718755200&semt=ais_user" }} style={styles.user_avt} />
+          <Text style={styles.user_name}>{user?.name || ""}</Text>
         </View>
         <View style={styles.progress}>
           <Text style={styles.progress_title}>Quá trình</Text>
@@ -97,7 +99,7 @@ const SettingScreen = ({ navigation }) => {
           </Pressable>
         ))}
       </View>
-      <ModalLogout visible={modalVisible} handleCloseModal={handleCloseModal} />
+      <ModalLogout visible={modalVisible} handleCloseModal={handleCloseModal} logout={logout} />
     </ScrollView>
   );
 };

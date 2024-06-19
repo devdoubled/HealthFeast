@@ -9,7 +9,7 @@ import PurposeScreen from "../../screens/Asking/PurposeScreen";
 import TargetWeightScreen from "../../screens/Asking/TargetWeightScreen";
 import WeightScreen from "../../screens/Asking/WeightScreen";
 
-const AskingItem = ({ item, onNext, askingData, setAskingData, navigation }) => {
+const AskingItem = ({item, onNext, askingData, setAskingData, navigation }) => {
   const { width } = useWindowDimensions();
   return (
     <View style={[styles.container, { width }]}>

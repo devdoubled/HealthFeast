@@ -232,7 +232,7 @@ const CaloriesTrackerScreen = ({ route, navigation }) => {
           </Text>
         </View>
         <View style={styles.progress_tracker}>
-          <CaloriesProgress eaten={roundToDecimal(userStatistic.tdee) - (mealStatisticHistory?.totalCalories || 0) + exerciseHistory.totalCalBurned} target={roundToDecimal(userStatistic.tdee)} />
+          <CaloriesProgress eaten={mealStatisticHistory?.totalCalories || 0} target={roundToDecimal(userStatistic?.tdee) - (mealStatisticHistory?.totalCalories || 0) + exerciseHistory.totalCalBurned} />
         </View>
         <View style={styles.meal_tracker}>
           <View style={styles.tracker}>

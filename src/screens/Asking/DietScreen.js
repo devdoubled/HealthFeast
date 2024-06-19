@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   diet_picker_container: {
-    flex: "row",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 70,
@@ -173,6 +173,6 @@ const styles = StyleSheet.create({
   },
   action_container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 20,
   },
 });

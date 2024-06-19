@@ -112,6 +112,6 @@ const styles = StyleSheet.create({
   },
   action_container: {
     position: "absolute",
-    bottom: 40,
+    bottom: 20,
   },
 });

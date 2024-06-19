@@ -30,6 +30,7 @@ const RegisterScreen = ({ navigation }) => {
     const registerData = {
       email: email
     }
+
     try {
       await apiClient.post("/Account/register/email", registerData)
       navigation.navigate("GetCodeScreen", { email: email });

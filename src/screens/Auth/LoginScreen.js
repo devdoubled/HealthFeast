@@ -1,4 +1,3 @@
-// import * as Updates from 'expo-updates';
 import React, { useContext, useRef, useState } from "react";
 import {
   Dimensions,
@@ -33,15 +32,14 @@ const LoginScreen = ({ navigation }) => {
     }
     try {
       const response = await apiClient.post("/Account/login", loginData);
-      const token = response.data.token
-      const userData = response.data.account
-      await login(userData, token);
+      const { token, account: userData } = response.data;
       const isNewUser = userData.status;
       if (isNewUser === 2) {
+        await login(userData, token);
         navigation.navigate("AskingScreen", { userId: userData.accountId });
-      } 
+      }
       else if (isNewUser === 3) {
-        // await Updates.reloadAsync();
+        await login(userData, token);
         navigation.navigate("MainStack");
       }
     } catch (error) {
