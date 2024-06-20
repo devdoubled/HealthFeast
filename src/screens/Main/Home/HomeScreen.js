@@ -263,9 +263,9 @@ const HomeScreen = ({ navigation }) => {
       </Pressable>
       {/* Macro tracking */}
       <View style={[styles.macro_tracking, { width: width - 32 }]}>
-        <MacroBar label="Tinh bột" value={Math.round(mealStatisticHistory.totalCarb || 0)} maxValue={Math.round(userStatistic.carbRecommended)} color="#9ABF5A" />
-        <MacroBar label="Đạm" value={Math.round(mealStatisticHistory.totalProtein || 0)} maxValue={Math.round(userStatistic.proteinRecommended)} color="#B266FD" />
-        <MacroBar label="Chất béo" value={Math.round(mealStatisticHistory.totalFat || 0)} maxValue={Math.round(userStatistic.fatRecommended)} color="#5285E8" />
+        <MacroBar label="Tinh bột" value={Math.round(mealStatisticHistory.totalCarb || 0)} maxValue={Math.round(userStatistic?.carbRecommended)} color="#9ABF5A" />
+        <MacroBar label="Đạm" value={Math.round(mealStatisticHistory.totalProtein || 0)} maxValue={Math.round(userStatistic?.proteinRecommended)} color="#B266FD" />
+        <MacroBar label="Chất béo" value={Math.round(mealStatisticHistory.totalFat || 0)} maxValue={Math.round(userStatistic?.fatRecommended)} color="#5285E8" />
       </View>
       {/* Exercise tracking */}
       <View style={[styles.exercise_tracking, { width: width - 32 }]}>

@@ -17,17 +17,17 @@ const NotifyScreen = () => {
     },
     {
       id: 3,
-      name: "Cho phép người khác bình luận",
+      name: "Cho phép bình luận",
       isCheck: true,
     },
     {
       id: 4,
-      name: "Cho phép người khác thích bài viết",
+      name: "Cho phép thích bài viết",
       isCheck: true,
     },
     {
       id: 5,
-      name: "Cho phép người khác ghi lại bài tập",
+      name: "Cho phép ghi lại bài tập",
       isCheck: false,
     },
     {

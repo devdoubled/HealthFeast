@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -9,16 +9,38 @@ import {
   Text,
   View,
 } from "react-native";
-import UserAvt from "../../../assets/images/user_default.png";
 import ModalEditBMI from "../../../components/Main/Setting/ModalEditBMI";
+import apiClient from './../../../services/apiService';
 
 const ProfileScreen = ({ route }) => {
   const width = Dimensions.get("window").width;
   const { user } = route.params
   const [modalVisible, setModalVisible] = useState(false);
+  const [userStatistic, setUserStatistic] = useState({})
+
+  useEffect(() => {
+    fetchUserStatistic();
+  }, [user?.accountId]);
+
+  const fetchUserStatistic = async () => {
+    try {
+      const statisticResponse = await apiClient.get(`/AccountStatistics/${user?.accountId}`);
+      setUserStatistic(statisticResponse.data);
+    } catch (error) {
+      console.log("Error fetching statistic:", error);
+    }
+  };
+
   const handleCloseModal = () => {
     setModalVisible(false)
   }
+
+  const getYear = (dateString) => {
+    let date = new Date(dateString);
+    let year = date.getFullYear();
+    return year;
+  }
+
   return (
     <View style={styles.container}>
       <View style={[styles.avatar_container, { width: width - 32 }]}>
@@ -41,19 +63,19 @@ const ProfileScreen = ({ route }) => {
         </View>
         <Pressable style={({ pressed }) => [styles.user_info, pressed && styles.pressed]} onPress={() => setModalVisible(true)}>
           <Text style={styles.user_name_title}>Cập nhật BMI</Text>
-          <Text style={styles.user_name_info}>Chiều cao/Cân nặng</Text>
+          <Text style={styles.user_name_info}>{userStatistic?.height} cm / {userStatistic?.weight} kg</Text>
         </Pressable>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Ngày sinh</Text>
-          <Text style={styles.user_name_info}>19/9/2002</Text>
+          <Text style={styles.user_name_info}>{getYear(user?.birthYear)}</Text>
         </View>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Giới tính</Text>
-          <Text style={styles.user_name_info}>Nam</Text>
+          <Text style={styles.user_name_info}>{user?.gender === 1 ? "Nam" : "Nữ"}</Text>
         </View>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Email</Text>
-          <Text style={styles.user_name_info}>{user.email}</Text>
+          <Text style={styles.user_name_info}>{user?.email}</Text>
         </View>
         <View style={styles.user_info}>
           <Text style={styles.user_name_title}>Vị trí</Text>
@@ -64,7 +86,7 @@ const ProfileScreen = ({ route }) => {
           <Text style={styles.user_name_info}>Indochina Time (Hanoi)</Text>
         </View>
       </View>
-      <ModalEditBMI user={user} visible={modalVisible} handleCloseModal={handleCloseModal} />
+      <ModalEditBMI userStatistic={userStatistic} visible={modalVisible} handleCloseModal={handleCloseModal} />
     </View>
   );
 };

@@ -74,7 +74,7 @@ const SettingScreen = ({ navigation }) => {
         <View style={styles.purpose_info}>
           <Text style={styles.purpose_title}>Nhớ cập nhật BMI nhoé</Text>
           <Text style={styles.purpose_desc}>
-            Cập nhật thường xuyên để có chỉ số chính xác.
+            Cập nhật thường xuyên để chỉ số chính xác.
           </Text>
         </View>
       </View>

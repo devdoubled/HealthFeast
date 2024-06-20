@@ -21,9 +21,10 @@ const GetCodeScreen = ({ navigation, route }) => {
     const checkOtpData = {
       email: email,
       otp: code,
-      password: ""
+      password: "",
+      name: ""
     }
-
+    
     try {
       await apiClient.post("/Account/check/otp", checkOtpData)
       navigation.navigate("EnterPasswordScreen", { email: email, otp: code });

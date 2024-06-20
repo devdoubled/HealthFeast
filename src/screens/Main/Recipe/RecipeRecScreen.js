@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -13,10 +13,31 @@ import {
 } from "react-native";
 import RecipeIconText from "../../../assets/images/activity_very.png";
 import NavbarList from "../../../components/Main/Recipe/NavbarList";
-import { recipeRec } from "../../../data/recipeRec";
+import apiClient from "../../../services/apiService";
 const RecipeRecScreen = ({ navigation, route }) => {
   const width = Dimensions.get("window").width;
   const [isWishlist, setIsWishlist] = useState(false);
+  const [recipes, setRecipes] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
+
+
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const fetchRecipes = async () => {
+    try {
+      const response = await apiClient.get(`/Recipes`);
+      const newRecipes = response.data;
+      const firstTenRecipes = newRecipes.slice(0, 10);
+      setRecipes(firstTenRecipes);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <NavbarList width={width} navigation={navigation} route={route} />
@@ -34,21 +55,21 @@ const RecipeRecScreen = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {recipeRec.map((data) => (
+        {recipes.map((data, index) => (
           <View
             style={[styles.recipe_content, { width: width - 32 }]}
-            key={data.id}
+            key={index}
           >
             <ImageBackground
-              source={{ uri: data.image }}
+              source={{ uri: data.images[0].imagePath }}
               style={styles.recipe_img}
               imageStyle={styles.imageBackground}
             ></ImageBackground>
             <View style={styles.recipe_info}>
               <View style={styles.recipe_main}>
-                <Text style={styles.recipe_name}>{data.name}</Text>
+                <Text style={styles.recipe_name}>{data.recipeName}</Text>
                 <Text style={styles.recipe_calo}>
-                  {data.calo} kCal, 1 khẩu phần
+                  {data.totalCalories} kCal, 1 khẩu phần
                 </Text>
               </View>
               <Pressable onPress={() => setIsWishlist(!isWishlist)}>

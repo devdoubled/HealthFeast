@@ -1,4 +1,5 @@
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { BlurView } from 'expo-blur';
 import React from "react";
 import {
   ImageBackground,
@@ -26,10 +27,13 @@ const RecipeItem = React.memo(({ item, navigation }) => {
         imageStyle={styles.imageBackground}
       >
         <FontAwesome5 name="arrow-alt-circle-right" size={24} color="white" style={styles.item_next} />
-        <Text style={styles.recipe_item_title}>{item.recipeName}</Text>
-        <View style={styles.recipe_item_details}>
-          <Text style={styles.details_text}>{item.totalCalories} kCal</Text>
-          <Text style={styles.details_text}>{item.timeInMinute} Phút</Text>
+        <View style={styles.recipe_content}>
+          <BlurView intensity={50} style={styles.absolute} />
+          <Text style={styles.recipe_item_title} numberOfLines={1} ellipsizeMode="tail">{item.recipeName}</Text>
+          <View style={styles.recipe_item_details}>
+            <Text style={styles.details_text}>{item.totalCalories} kCal</Text>
+            <Text style={styles.details_text}>{item.timeInMinute} Phút</Text>
+          </View>
         </View>
       </ImageBackground>
     </Pressable>
@@ -62,19 +66,30 @@ const styles = StyleSheet.create({
   imageBackground: {
     borderRadius: 10,
   },
+  recipe_content: {
+    position: "relative",
+    overflow: "hidden",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+  },
+  absolute: {
+    ...StyleSheet.absoluteFillObject,
+  },
   recipe_item_title: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: "Montserrat-Medium",
     fontSize: 16,
-    marginLeft: 8,
     marginBottom: 3,
     color: "#FFFFFF",
+    maxWidth: 200,
+    overflow: 'hidden',
   },
   recipe_item_details: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginHorizontal: 8,
-    marginBottom: 8,
   },
   details_text: {
     fontFamily: "Montserrat-Regular",
@@ -84,4 +99,5 @@ const styles = StyleSheet.create({
   item_pressed: {
     opacity: 0.9,
   },
+  
 });

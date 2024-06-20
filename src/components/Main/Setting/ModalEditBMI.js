@@ -1,10 +1,15 @@
 import { AntDesign } from '@expo/vector-icons';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-const ModalEditBMI = ({ user, visible, handleCloseModal }) => {
+const ModalEditBMI = ({ userStatistic, visible, handleCloseModal }) => {
   const [nav, setNav] = useState("Chiều cao");
-  const [height, setHeight] = useState(user.height)
-  const [weight, setWeight] = useState(user.weight)
+  const [height, setHeight] = useState(0)
+  const [weight, setWeight] = useState(0)
+
+  useEffect(() => {
+    setHeight(userStatistic?.height || 0);
+    setWeight(userStatistic?.weight || 0);
+  }, [userStatistic]);
 
   const handlePlusHeight = () => {
     setHeight(prev => prev + 1)
@@ -123,7 +128,8 @@ const styles = StyleSheet.create({
     right: 0,
     width: "100%",
     height: 520,
-    borderRadius: 30,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     backgroundColor: "#2E2E2E",
   },
   line_container: {

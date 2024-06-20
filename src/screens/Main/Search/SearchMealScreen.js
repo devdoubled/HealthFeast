@@ -78,12 +78,9 @@ const SearchMealScreen = ({ navigation, route }) => {
 
   const deleteSelectedMeals = async (mealType) => {
     const selectedMeals = mealTimeData[mealType].selected;
-
-    // Delete each selected meal from API
     for (let mealId of selectedMeals) {
       try {
         await apiClient.delete(`/FavoriteRecipes/${mealId}`);
-        console.log(`Deleted meal with recipeId ${mealId}`);
       } catch (error) {
         console.log(`Error deleting meal with recipeId ${mealId}: `, error);
       }

@@ -45,6 +45,8 @@ const EnterPasswordScreen = ({ navigation, route }) => {
       password: password,
       name: userName
     }
+
+    console.log(newPasswordData);
     try {
       await apiClient.post("/Account/confirm/newaccount", newPasswordData);
       navigation.navigate("LoginScreen");

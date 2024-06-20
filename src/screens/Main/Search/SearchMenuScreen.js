@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-SemiBold",
     fontSize: 18,
     color: "#000000",
-    maxWidth: 200, // adjust this value as needed
+    maxWidth: 220,
     overflow: 'hidden',
   },
   item_info: {
