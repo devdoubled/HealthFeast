@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,6 +11,8 @@ import CustomButton from "../../components/Auth/CustomButton";
 
 const HeightScreen = ({ onNext, askingData, setAskingData }) => {
   const { width } = useWindowDimensions();
+  const [isVisibleBtn, setIsVisibleBtn] = useState(true);
+
   const handleNext = () => {
     onNext();
   };
@@ -33,12 +35,16 @@ const HeightScreen = ({ onNext, askingData, setAskingData }) => {
               setAskingData({ ...askingData, height: formattedValue });
             }}
             selectionColor="#FFFFFF"
+            onFocus={() => setIsVisibleBtn(false)}
+            onBlur={() => setIsVisibleBtn(true)}
           />
         </View>
       </View>
-      <View style={[styles.action_container, { width: width - 60 }]}>
-        <CustomButton text="Tiếp tục" onPress={handleNext} />
-      </View>
+      {isVisibleBtn && (
+        <View style={[styles.action_container, { width: width - 60 }]}>
+          <CustomButton text="Tiếp tục" onPress={handleNext} />
+        </View>
+      )}
     </View>
   );
 };

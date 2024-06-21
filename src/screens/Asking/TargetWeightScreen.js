@@ -6,6 +6,8 @@ import CustomButton from "../../components/Auth/CustomButton";
 const TargetWeightScreen = ({ onNext }) => {
   const { width } = useWindowDimensions();
   const [targetWeight, setTargetWeight] = useState(0);
+  const [isVisibleBtn, setIsVisibleBtn] = useState(true);
+
   const handleNext = () => {
     onNext();
   };
@@ -24,12 +26,16 @@ const TargetWeightScreen = ({ onNext }) => {
             keyboardType="numeric"
             selectionColor="#FFFFFF"
             onChangeText={(value) => setTargetWeight(value)}
+            onFocus={() => setIsVisibleBtn(false)}
+            onBlur={() => setIsVisibleBtn(true)}
           />
         </View>
       </View>
-      <View style={[styles.action_container, { width: width - 60 }]}>
-        <CustomButton text="Tiếp tục" onPress={handleNext}/>
-      </View>
+      {isVisibleBtn && (
+        <View style={[styles.action_container, { width: width - 60 }]}>
+          <CustomButton text="Tiếp tục" onPress={handleNext} />
+        </View>
+      )}
     </View>
   );
 };
