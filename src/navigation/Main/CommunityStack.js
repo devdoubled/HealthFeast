@@ -10,9 +10,9 @@ const Stack = createNativeStackNavigator();
 const CommunityStack = () => {
   return (
     <Stack.Navigator
-      screenOptions={{
-        animation: "none",
-      }}
+      // screenOptions={{
+      //   animation: "none",
+      // }}
     >
       <Stack.Screen
         name="CommunityScreen"

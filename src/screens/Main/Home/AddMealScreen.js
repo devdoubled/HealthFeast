@@ -20,8 +20,7 @@ import apiClient from "../../../services/apiService";
 
 const AddMealScreen = ({ navigation, route }) => {
   const width = Dimensions.get("window").width;
-  const { mealId } = route.params
-
+  const { mealId, date } = route.params
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
@@ -45,7 +44,7 @@ const AddMealScreen = ({ navigation, route }) => {
   }, [debouncedValue]);
 
   const handlePressSearchResult = (meal) => {
-    navigation.navigate("MealResultDetailScreen", { meal: meal, mealId: mealId });
+    navigation.navigate("MealResultDetailScreen", { meal: meal, mealId: mealId, date: date });
   }
 
   const handleChangeSearchInput = (search) => {

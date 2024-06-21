@@ -1,6 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   ImageBackground,
@@ -16,10 +17,9 @@ import NavbarList from "../../../components/Main/Recipe/NavbarList";
 import apiClient from "../../../services/apiService";
 const RecipeRecScreen = ({ navigation, route }) => {
   const width = Dimensions.get("window").width;
-  const [isWishlist, setIsWishlist] = useState(false);
+  const [wishlists, setWishlists] = useState([]);
   const [recipes, setRecipes] = useState([])
   const [isLoading, setIsLoading] = useState(true);
-
 
   useEffect(() => {
     fetchRecipes();
@@ -29,13 +29,26 @@ const RecipeRecScreen = ({ navigation, route }) => {
     try {
       const response = await apiClient.get(`/Recipes`);
       const newRecipes = response.data;
-      const firstTenRecipes = newRecipes.slice(0, 10);
-      setRecipes(firstTenRecipes);
+      const randomRecipes = getRandomRecipes(newRecipes, 10);
+      setRecipes(randomRecipes);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getRandomRecipes = (recipes, count) => {
+    let shuffled = recipes.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  const toggleWishlist = (index) => {
+    setWishlists((prevWishlists) => {
+      const newWishlists = [...prevWishlists];
+      newWishlists[index] = !newWishlists[index];
+      return newWishlists;
+    });
   };
 
   return (
@@ -55,33 +68,39 @@ const RecipeRecScreen = ({ navigation, route }) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {recipes.map((data, index) => (
-          <View
-            style={[styles.recipe_content, { width: width - 32 }]}
-            key={index}
-          >
-            <ImageBackground
-              source={{ uri: data.images[0].imagePath }}
-              style={styles.recipe_img}
-              imageStyle={styles.imageBackground}
-            ></ImageBackground>
-            <View style={styles.recipe_info}>
-              <View style={styles.recipe_main}>
-                <Text style={styles.recipe_name}>{data.recipeName}</Text>
-                <Text style={styles.recipe_calo}>
-                  {data.totalCalories} kCal, 1 khẩu phần
-                </Text>
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#9ABF5A" />
+          </View>) : (
+          recipes.map((data, index) => (
+            <View
+              style={[styles.recipe_content, { width: width - 32 }]}
+              key={index}
+            >
+              <ImageBackground
+                source={{ uri: data.images[0].imagePath }}
+                style={styles.recipe_img}
+                imageStyle={styles.imageBackground}
+              ></ImageBackground>
+              <View style={styles.recipe_info}>
+                <View style={styles.recipe_main}>
+                  <Text style={styles.recipe_name}>{data.recipeName}</Text>
+                  <Text style={styles.recipe_calo}>
+                    {data.totalCalories} kCal, 1 khẩu phần
+                  </Text>
+                </View>
+                <Pressable onPress={() => toggleWishlist(index)}>
+                  <AntDesign
+                    name={wishlists[index] ? "star" : "staro"}
+                    size={34}
+                    color="#FFFFFF"
+                  />
+                </Pressable>
               </View>
-              <Pressable onPress={() => setIsWishlist(!isWishlist)}>
-                <AntDesign
-                  name={isWishlist ? "star" : "staro"}
-                  size={34}
-                  color="#FFFFFF"
-                />
-              </Pressable>
             </View>
-          </View>
-        ))}
+          ))
+        )}
+
       </ScrollView>
     </View>
   );
@@ -120,7 +139,9 @@ const styles = StyleSheet.create({
     color: "#000000",
   },
   recipe_rec_container: {
+    flex: 1,
     marginHorizontal: 16,
+
   },
   recipe_content: {
     marginBottom: 15,
@@ -156,5 +177,10 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Regular",
     fontSize: 14,
     color: "#FFFFFF",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

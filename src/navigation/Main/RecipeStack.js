@@ -12,9 +12,9 @@ const Stack = createNativeStackNavigator();
 const RecipeStack = () => {
   return (
     <Stack.Navigator
-      screenOptions={{
-        animation: "none",
-      }}
+      // screenOptions={{
+      //   animation: "none",
+      // }}
     >
       <Stack.Screen
         name="RecipeScreen"

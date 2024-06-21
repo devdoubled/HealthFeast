@@ -66,7 +66,7 @@ const ProfileScreen = ({ route }) => {
           <Text style={styles.user_name_info}>{userStatistic?.height} cm / {userStatistic?.weight} kg</Text>
         </Pressable>
         <View style={styles.user_info}>
-          <Text style={styles.user_name_title}>Ngày sinh</Text>
+          <Text style={styles.user_name_title}>Năm sinh</Text>
           <Text style={styles.user_name_info}>{getYear(user?.birthYear)}</Text>
         </View>
         <View style={styles.user_info}>

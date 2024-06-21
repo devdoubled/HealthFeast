@@ -101,6 +101,12 @@ const HomeScreen = ({ navigation }) => {
         totalProtein: mealData.totalProtein,
       });
     } catch (error) {
+      setMealHistories({
+        breakfast: [],
+        lunch: [],
+        dinner: [],
+        snack: [],
+      });
       setMealStatisticHistory({
         totalCalories: 0,
         totalCarb: 0,
@@ -154,7 +160,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleAddMealPress = (mealId) => {
-    navigation.navigate("AddMealScreen", { mealId: mealId });
+    navigation.navigate("AddMealScreen", { mealId: mealId, date: value.toISOString() });
   };
 
   const handlePressExcersize = () => {

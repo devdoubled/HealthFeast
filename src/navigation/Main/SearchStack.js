@@ -11,9 +11,9 @@ const Stack = createNativeStackNavigator();
 const SearchStack = () => {
   return (
     <Stack.Navigator
-      screenOptions={{
-        animation: "none",
-      }}
+      // screenOptions={{
+      //   animation: "none",
+      // }}
     >
       <Stack.Screen
         name="SearchScreen"

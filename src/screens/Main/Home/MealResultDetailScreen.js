@@ -15,7 +15,7 @@ import apiClient from "../../../services/apiService";
 moment.locale("vi");
 
 const MealResultDetailScreen = ({ route }) => {
-  const { meal, mealId } = route.params;
+  const { meal, mealId, date } = route.params;
   const width = Dimensions.get("window").width;
   const [valueCalories, setValueCalories] = useState(meal.totalCalories);
   const [valueCarb, setValueCarb] = useState(meal.totalCarb)
@@ -80,7 +80,7 @@ const MealResultDetailScreen = ({ route }) => {
   }
 
   const formatDate = () => {
-    const formattedDate = moment(Date.now()).format('YYYY-MM-DD');
+    const formattedDate = moment(date).format('YYYY-MM-DD');
     return formattedDate;
   };
 
